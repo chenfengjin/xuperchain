@@ -18,6 +18,7 @@ type contractMethods struct {
 // Deploy deploys contract
 func (c *contractMethods) Deploy(ctx *KContext, args map[string][]byte) (*contract.Response, error) {
 	// check if account exist
+	fmt.Println("1.start deploy")
 	accountName := args["account_name"]
 	contractName := args["contract_name"]
 	if accountName == nil || contractName == nil {

@@ -179,7 +179,7 @@ github.com/gtank/ristretto255
 github.com/gtank/ristretto255/internal/edwards25519
 github.com/gtank/ristretto255/internal/radix51
 github.com/gtank/ristretto255/internal/scalar
-# github.com/hashicorp/golang-lru v0.5.3
+# github.com/hashicorp/golang-lru v0.5.4
 github.com/hashicorp/golang-lru
 github.com/hashicorp/golang-lru/simplelru
 # github.com/hashicorp/hcl v1.0.0
@@ -270,7 +270,7 @@ github.com/jmespath/go-jmespath
 # github.com/juju/ansiterm v0.0.0-20180109212912-720a0952cc2a
 github.com/juju/ansiterm
 github.com/juju/ansiterm/tabwriter
-# github.com/konsorten/go-windows-terminal-sequences v1.0.1
+# github.com/konsorten/go-windows-terminal-sequences v1.0.3
 github.com/konsorten/go-windows-terminal-sequences
 # github.com/koron/go-ssdp v0.0.0-20180514024734-4a0ed625a78b
 github.com/koron/go-ssdp
@@ -468,7 +468,7 @@ github.com/robertkrimen/otto/file
 github.com/robertkrimen/otto/parser
 github.com/robertkrimen/otto/registry
 github.com/robertkrimen/otto/token
-# github.com/sirupsen/logrus v1.4.2
+# github.com/sirupsen/logrus v1.6.0
 github.com/sirupsen/logrus
 # github.com/spacemonkeygo/spacelog v0.0.0-20180420211403-2296661a0572
 github.com/spacemonkeygo/spacelog
