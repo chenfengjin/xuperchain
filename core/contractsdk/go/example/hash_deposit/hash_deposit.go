@@ -29,13 +29,13 @@ func (hd *hashDeposit) StoreFileInfo(ctx code.Context) code.Response {
 	if err != nil {
 		return code.Error(err)
 	}
-	userKey := utils.ContactWithString(UserBucket, "/", args.UsedID, "/", args.HashID)
-	hashKey := utils.ContactWithString(HashBucket, "/", args.HashID)
-	value := utils.ContactWithString(args.UsedID, "\t", args.HashID, "\t", args.FileName)
+	userKey := utils.ConcatWithString(UserBucket, "/", args.UsedID, "/", args.HashID)
+	hashKey := utils.ConcatWithString(HashBucket, "/", args.HashID)
+	value := utils.ConcatWithString(args.UsedID, "\t", args.HashID, "\t", args.FileName)
 
 	//TODO
 	// error == nil means hash exists already
-	if _, err = ctx.GetObject(utils.ContactWithString(hashKey)); err == nil {
+	if _, err = ctx.GetObject(utils.ConcatWithString(hashKey)); err == nil {
 		return code.Error(err)
 	}
 	if err := ctx.PutObject(userKey, value); err != nil {
@@ -49,18 +49,18 @@ func (hd *hashDeposit) StoreFileInfo(ctx code.Context) code.Response {
 }
 
 func (hd *hashDeposit) queryUserList(ctx code.Context) code.Response {
-	key := utils.ContactWithString(UserBucket, "/")
-	iter := ctx.NewIterator(key, utils.ContactWithString(key, "~"))
+	key := utils.ConcatWithString(UserBucket, "/")
+	iter := ctx.NewIterator(key, utils.ConcatWithString(key, "~"))
 	result := []byte{}
 	for iter.Next() {
 		//TODO error 处理@fengjin
 		k := string(iter.Key())
 		v := iter.Value()
 		if len(k) > len(UserBucket)+1 {
-			result = append(result, utils.ContactWithString(v[len(UserBucket)+1:], "\n")...)
+			result = append(result, utils.ConcatWithString(v[len(UserBucket)+1:], "\n")...)
 		}
 	}
-	return code.OK(utils.ContactWithString(result))
+	return code.OK(utils.ConcatWithString(result))
 }
 
 func (hd *hashDeposit) QueryFileInfoByUser(ctx code.Context) code.Response {
@@ -71,12 +71,12 @@ func (hd *hashDeposit) QueryFileInfoByUser(ctx code.Context) code.Response {
 		return code.Error(err)
 	}
 	result := []byte{}
-	start := utils.ContactWithString(UserBucket, "/", args.UserID)
-	end := utils.ContactWithString(start, "~")
+	start := utils.ConcatWithString(UserBucket, "/", args.UserID)
+	end := utils.ConcatWithString(start, "~")
 	iter := ctx.NewIterator(start, end)
 	for iter.Next() {
 		//TODO error 处理 @fengjin
-		result = append(result, utils.ContactWithString(iter.Value(), "\n")...)
+		result = append(result, utils.ConcatWithString(iter.Value(), "\n")...)
 	}
 	return code.OK(result)
 }
@@ -88,7 +88,7 @@ func (hd *hashDeposit) QueryFileInfoByHash(ctx code.Context) code.Response {
 	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	key := utils.ContactWithString(HashBucket, "/", args.HashID)
+	key := utils.ConcatWithString(HashBucket, "/", args.HashID)
 	value, err := ctx.GetObject(key)
 	if err != nil {
 		return code.Error(err)

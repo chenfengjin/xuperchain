@@ -42,7 +42,7 @@ func (am *awardManage) Initialize(ctx code.Context) code.Response {
 		return code.Error(err)
 	}
 
-	if err := ctx.PutObject(utils.ContactWithString(MASTERPRE), utils.ContactWithString(caller)); err != nil {
+	if err := ctx.PutObject(utils.ConcatWithString(MASTERPRE), utils.ConcatWithString(caller)); err != nil {
 		return code.Error(err)
 	}
 
@@ -205,12 +205,12 @@ func (am *awardManage) Approve(ctx code.Context) code.Response {
 	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	value, err := ctx.GetObject(utils.ContactWithString(ALLOWANCEPRE, args.From, "_", args.To))
+	value, err := ctx.GetObject(utils.ConcatWithString(ALLOWANCEPRE, args.From, "_", args.To))
 	if err != nil {
 
 	}
 
-	from_balance, err := ctx.GetObject(utils.ContactWithString(BALANCEPRE, args.From))
+	from_balance, err := ctx.GetObject(utils.ConcatWithString(BALANCEPRE, args.From))
 	if err != nil {
 		return code.Error(err)
 	}
@@ -221,7 +221,7 @@ func (am *awardManage) Approve(ctx code.Context) code.Response {
 	if utils.Compare(from_balance, args.Token) < 0 {
 		return code.Error(ErrBalanceNotMeet)
 	}
-	to_balance, err := ctx.GetObject(utils.ContactWithString(BALANCEPRE, args.To))
+	to_balance, err := ctx.GetObject(utils.ConcatWithString(BALANCEPRE, args.To))
 	if err != nil {
 		return code.Error(err)
 	}
