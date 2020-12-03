@@ -24,7 +24,7 @@ func (st *sourceTrace) Initialize(ctx code.Context) code.Response {
 	args := struct {
 		Admin []byte `json:"admin",required:"true"`
 	}{}
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	ctx.PutObject(utils.ConcatWithString(ADMIN), args.Admin)
@@ -49,7 +49,7 @@ func (st *sourceTrace) CreateGoods(ctx code.Context) code.Response {
 		Id   []byte `json:"id",required:"true''"`
 		Desc []byte `json:"desc",required:"desc"`
 	}{}
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	goodsKey := utils.ConcatWithString(GOODS, args.Id)
@@ -90,7 +90,7 @@ func (st *sourceTrace) updateGoods(ctx code.Context) code.Response {
 		Reason []byte `json:"reason",required:"true"`
 	}{}
 
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	value, err := ctx.GetObject(utils.ConcatWithString(GOODSRECORDTOP, args.Id))
@@ -112,7 +112,7 @@ func (st *sourceTrace) QueryRecords(ctx code.Context) code.Response {
 	args := struct {
 		Id []byte `json:"id",required:"true"`
 	}{}
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	//TODO @fengjin 不存在的时候error 是什么情况呢?

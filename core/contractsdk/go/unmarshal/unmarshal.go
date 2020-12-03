@@ -7,7 +7,7 @@ import (
 )
 
 //遍历struct并且自动进行赋值
-func Vaildate(data map[string][]byte, inStructPtr interface{}) error {
+func Validate(data map[string][]byte, inStructPtr interface{}) error {
 	rType := reflect.TypeOf(inStructPtr)
 	rVal := reflect.ValueOf(inStructPtr)
 	if rType.Kind() == reflect.Ptr {

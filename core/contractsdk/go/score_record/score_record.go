@@ -20,7 +20,7 @@ func (sr *scoreRecord) Initialize(ctx code.Context) code.Response {
 	args := struct {
 		Owner []byte `json:"owner",required:"true"`
 	}{}
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	if err := ctx.PutObject(utils.ConcatWithString(OWNER_KEY), args.Owner); err != nil {
@@ -45,7 +45,7 @@ func (sc *scoreRecord) AddScore(ctx code.Context) code.Response {
 		UserId []byte `json:"user_id",required:"true"`
 		Data   []byte `json:"data",required:"data"`
 	}{}
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	if err := ctx.PutObject(utils.ConcatWithString(RECORD_KEY, args.UserId), args.Data); err != nil {
@@ -58,7 +58,7 @@ func (sr *scoreRecord) QueryScore(ctx code.Context) code.Response {
 	args := struct {
 		UserId []byte `json:"userid",required:"true"`
 	}{}
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	if data, err := ctx.GetObject(utils.ConcatWithString(RECORD_KEY, args.UserId)); err != nil {

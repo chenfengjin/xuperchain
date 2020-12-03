@@ -17,6 +17,6 @@ func TestUnmarshal(t *testing.T) {
 		Name string `json:"name"`
 		//Age  int    `json:"age"`
 	}{}
-	Vaildate(a, &v)
+	Validate(a, &v)
 	fmt.Println(v.Name)
 }

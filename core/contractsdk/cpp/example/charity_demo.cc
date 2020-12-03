@@ -59,6 +59,7 @@ private:
     const std::string USERDONATE = "UserDonate_";
     const std::string ALLDONATE = "AllDonate_";
     const std::string ALLCOST = "AllCost_";
+//    why?
     const std::string TOTALRECEIVED = "TotalDonates";
     const std::string TOTALCOSTS = "TotalCosts";
     const std::string BALANCE = "Balance";

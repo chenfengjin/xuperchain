@@ -22,7 +22,7 @@ func (ga *gameAssets) Initialize(ctx code.Context) code.Response {
 		Admin []byte `json:"admin",required:"true"`
 	}{}
 
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	if err := ctx.PutObject(utils.ConcatWithString(ADMIN), args.Admin); err != nil {
@@ -55,7 +55,7 @@ func (ga *gameAssets) AddAssetType(ctx code.Context) code.Response {
 		TypeID   []byte `json:"typeid",required:"true"`
 		TypeDesc []byte `json:"typedesc",required:"true"`
 	}{}
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	assetKey := utils.ConcatWithString(ASSETTYPE, args.TypeID)
@@ -94,7 +94,7 @@ func(ga*gameAssets)getAssetByUser(ctx code.Context)code.Response{
 	args:= struct {
 		UserID []byte `json:"userid",required:"false"`
 	}{}
-	if err:=unmarshal.Vaildate(ctx.Args(),&args);err!=nil{
+	if err:=unmarshal.Validate(ctx.Args(),&args);err!=nil{
 		return code.Error(err)
 	}
 //	TODO 这一段太重复了，想办法抽象一下吧
@@ -140,7 +140,7 @@ func(ga *gameAssets)NewAssetToUser(ctx code.Context)code.Response{
 		AssetId []byte `json:"assetid",required:"true"`
 
 	}{}
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	assetKey:=utils.ConcatWithString(ASSET2USER,args.AssetId)
@@ -168,7 +168,7 @@ func(ga *gameAssets)TradeAsset(ctx code.Context)code.Response{
 		To []byte `json:"to",required:"true"`
 		AssetId []byte `json:"assetid",required:"true"`
 	}{}
-	if err:=unmarshal.Vaildate(ctx.Args(),&args);err!=nil{
+	if err:=unmarshal.Validate(ctx.Args(),&args);err!=nil{
 		return code.Error(err)
 	}
 	userAssetKey:=utils.ConcatWithString(USERASSET,from,"_",args.AssetId)

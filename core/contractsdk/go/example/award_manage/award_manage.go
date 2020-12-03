@@ -25,7 +25,7 @@ func (am *awardManage) Initialize(ctx code.Context) code.Response {
 	args := struct {
 		totalSupply []byte `json:"totalSupply",lt:"0"`
 	}{}
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 
@@ -64,7 +64,7 @@ func (am *awardManage) AddAward(ctx code.Context) code.Response {
 		Amount []byte `json:"amount"`
 		Value  []byte `json:"value"`
 	}{}
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 
@@ -87,7 +87,7 @@ func (am *awardManage) Balance(ctx code.Context) code.Response {
 	args := struct {
 		Caller []byte `json:"caller"`
 	}{}
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 
@@ -103,7 +103,7 @@ func (am *awardManage) Allowance(ctx code.Context) code.Response {
 		From []byte `json:"from"`
 		To   []byte `json:"to"`
 	}{}
-	unmarshal.Vaildate(ctx.Args(), &args)
+	unmarshal.Validate(ctx.Args(), &args)
 
 	buf := bytes.NewBufferString(ALLOWANCEPRE)
 	buf.Write(args.From)
@@ -128,7 +128,7 @@ func (am *awardManage) Transfer(ctx code.Context) code.Response {
 		Raw    map[string][]byte
 	}{}
 
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	if utils.Compare(args.From, args.Token) == 0 {
@@ -160,7 +160,7 @@ func (am *awardManage) TransferFrom(ctx code.Context) code.Response {
 		Token  []byte `json:"token",required:"true"`
 	}{}
 
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 
@@ -202,7 +202,7 @@ func (am *awardManage) Approve(ctx code.Context) code.Response {
 		ValidateFunc func() error
 	}{}
 
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	value, err := ctx.GetObject(utils.ConcatWithString(ALLOWANCEPRE, args.From, "_", args.To))

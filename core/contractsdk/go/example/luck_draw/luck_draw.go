@@ -28,7 +28,7 @@ func (ld *luckDraw) Initialize(ctx code.Context) code.Response {
 	args := struct {
 		Admin []byte `json:"admin"`
 	}{}
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	if err := ctx.PutObject(utils.ConcatWithString(ADMIN), args.Admin); err != nil {
@@ -92,7 +92,7 @@ func (ld *luckDraw) StartLuckDraw(ctx code.Context) code.Response {
 	args := struct {
 		Seed []byte `json:"seed",required:"true"`
 	}{}
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	//	TODO seed 的格式

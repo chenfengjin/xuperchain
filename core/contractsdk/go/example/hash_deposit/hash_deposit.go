@@ -25,7 +25,7 @@ func (hd *hashDeposit) StoreFileInfo(ctx code.Context) code.Response {
 		HashID   []byte `json:"hash_id",required:"true"`
 		FileName []byte `json:"file_name",required:"true"`
 	}{}
-	err := unmarshal.Vaildate(ctx.Args(), &args)
+	err := unmarshal.Validate(ctx.Args(), &args)
 	if err != nil {
 		return code.Error(err)
 	}
@@ -67,7 +67,7 @@ func (hd *hashDeposit) QueryFileInfoByUser(ctx code.Context) code.Response {
 	args := struct {
 		UserID []byte `json:"user_id",required:"true"`
 	}{}
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	result := []byte{}
@@ -85,7 +85,7 @@ func (hd *hashDeposit) QueryFileInfoByHash(ctx code.Context) code.Response {
 	args := struct {
 		HashID []byte `json:"hash_id",required:"true"`
 	}{}
-	if err := unmarshal.Vaildate(ctx.Args(), &args); err != nil {
+	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	key := utils.ConcatWithString(HashBucket, "/", args.HashID)

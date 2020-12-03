@@ -12,6 +12,7 @@ var (
 	ErrMissingCaller    = errors.New("missing caller")
 	ErrPermissionDenied = errors.New("permission denied")
 	ErrObjectExists     = errors.New("objet already exists")
+	ErrBalanceLow       = errors.New("balance not enough") // TODO check 下语法
 )
 
 const (
@@ -47,11 +48,11 @@ func getByteOrder() int64 {
 }
 
 //both a and b are byte representation of number str like []byte("1")
-func Add(a []byte, b []byte) []byte {
+func Add(a, b interface{}) []byte {
 	return nil
 }
 
-func Sub([]byte, []byte) []byte {
+func Sub(a, b interface{}) []byte {
 	return nil
 
 }
