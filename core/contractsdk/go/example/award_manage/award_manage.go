@@ -3,10 +3,10 @@ package main
 import (
 	"bytes"
 	"errors"
-	utils "github.com/xuperchain/xuperchain/core/contractsdk/go"
 	"github.com/xuperchain/xuperchain/core/contractsdk/go/code"
 	"github.com/xuperchain/xuperchain/core/contractsdk/go/driver"
-	"github.com/xuperchain/xuperchain/core/contractsdk/go/unmarshal"
+	"github.com/xuperchain/xuperchain/core/contractsdk/go/utils"
+	utils2 "github.com/xuperchain/xuperchain/core/contractsdk/go/utils"
 )
 
 const (
@@ -25,7 +25,7 @@ func (am *awardManage) Initialize(ctx code.Context) code.Response {
 	args := struct {
 		totalSupply []byte `json:"totalSupply",lt:"0"`
 	}{}
-	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
+	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 
@@ -42,7 +42,7 @@ func (am *awardManage) Initialize(ctx code.Context) code.Response {
 		return code.Error(err)
 	}
 
-	if err := ctx.PutObject(utils.ConcatWithString(MASTERPRE), utils.ConcatWithString(caller)); err != nil {
+	if err := ctx.PutObject(utils2.ConcatWithString(MASTERPRE), utils2.ConcatWithString(caller)); err != nil {
 		return code.Error(err)
 	}
 
@@ -64,11 +64,11 @@ func (am *awardManage) AddAward(ctx code.Context) code.Response {
 		Amount []byte `json:"amount"`
 		Value  []byte `json:"value"`
 	}{}
-	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
+	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 
-	totalSupply := utils.Add(args.Amount, args.Value)
+	totalSupply := utils2.Add(args.Amount, args.Value)
 	ctx.PutObject([]byte("totalSupply"), totalSupply)
 	return code.OK([]byte("ok"))
 }
@@ -87,7 +87,7 @@ func (am *awardManage) Balance(ctx code.Context) code.Response {
 	args := struct {
 		Caller []byte `json:"caller"`
 	}{}
-	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
+	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 
@@ -103,7 +103,7 @@ func (am *awardManage) Allowance(ctx code.Context) code.Response {
 		From []byte `json:"from"`
 		To   []byte `json:"to"`
 	}{}
-	unmarshal.Validate(ctx.Args(), &args)
+	utils.Validate(ctx.Args(), &args)
 
 	buf := bytes.NewBufferString(ALLOWANCEPRE)
 	buf.Write(args.From)
@@ -128,17 +128,17 @@ func (am *awardManage) Transfer(ctx code.Context) code.Response {
 		Raw    map[string][]byte
 	}{}
 
-	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
+	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	if utils.Compare(args.From, args.Token) == 0 {
+	if utils2.Compare(args.From, args.Token) == 0 {
 		return code.Error(errors.New("can not transfer to yourself"))
 	}
 
 	from_balance, err := ctx.GetObject((append([]byte(BALANCEPRE), args.From...)))
 	if err != nil {
 	}
-	if utils.Compare(from_balance, args.Token) < 0 {
+	if utils2.Compare(from_balance, args.Token) < 0 {
 		return code.Error(nil)
 	}
 	to_balance, err := ctx.GetObject((append([]byte(BALANCEPRE), args.To...)))
@@ -146,8 +146,8 @@ func (am *awardManage) Transfer(ctx code.Context) code.Response {
 		return code.Error(err)
 	}
 
-	to_balance = utils.Add(to_balance, args.Token)
-	from_balance = utils.Sub(from_balance, args.Token)
+	to_balance = utils2.Add(to_balance, args.Token)
+	from_balance = utils2.Sub(from_balance, args.Token)
 	return code.OK([]byte("ok"))
 
 }
@@ -160,7 +160,7 @@ func (am *awardManage) TransferFrom(ctx code.Context) code.Response {
 		Token  []byte `json:"token",required:"true"`
 	}{}
 
-	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
+	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 
@@ -169,7 +169,7 @@ func (am *awardManage) TransferFrom(ctx code.Context) code.Response {
 		return code.Error(err)
 
 	}
-	if utils.Compare(value, args.Token) < 0 {
+	if utils2.Compare(value, args.Token) < 0 {
 		return code.Error(ErrBalanceNotMeet)
 	}
 
@@ -177,7 +177,7 @@ func (am *awardManage) TransferFrom(ctx code.Context) code.Response {
 	if err != nil {
 		return code.Error(err)
 	}
-	if utils.Compare(from_balance, args.Token) < 0 {
+	if utils2.Compare(from_balance, args.Token) < 0 {
 		return code.Error(ErrBalanceNotMeet)
 	}
 	to_balance, err := ctx.GetObject([]byte(BALANCEPRE + args.To))
@@ -186,7 +186,7 @@ func (am *awardManage) TransferFrom(ctx code.Context) code.Response {
 	}
 	_ = to_balance
 	allowance_balance := []byte{} //TODO
-	allowance_balance = utils.Sub(allowance_balance, args.Token)
+	allowance_balance = utils2.Sub(allowance_balance, args.Token)
 	allowance_key := []byte("") // TODO
 	ctx.PutObject(allowance_key, allowance_balance)
 	return code.OK(nil)
@@ -202,31 +202,31 @@ func (am *awardManage) Approve(ctx code.Context) code.Response {
 		ValidateFunc func() error
 	}{}
 
-	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
+	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	value, err := ctx.GetObject(utils.ConcatWithString(ALLOWANCEPRE, args.From, "_", args.To))
+	value, err := ctx.GetObject(utils2.ConcatWithString(ALLOWANCEPRE, args.From, "_", args.To))
 	if err != nil {
 
 	}
 
-	from_balance, err := ctx.GetObject(utils.ConcatWithString(BALANCEPRE, args.From))
+	from_balance, err := ctx.GetObject(utils2.ConcatWithString(BALANCEPRE, args.From))
 	if err != nil {
 		return code.Error(err)
 	}
 
-	if utils.Compare(value, args.Token) < 0 {
+	if utils2.Compare(value, args.Token) < 0 {
 		return code.Error(ErrBalanceNotMeet)
 	}
-	if utils.Compare(from_balance, args.Token) < 0 {
+	if utils2.Compare(from_balance, args.Token) < 0 {
 		return code.Error(ErrBalanceNotMeet)
 	}
-	to_balance, err := ctx.GetObject(utils.ConcatWithString(BALANCEPRE, args.To))
+	to_balance, err := ctx.GetObject(utils2.ConcatWithString(BALANCEPRE, args.To))
 	if err != nil {
 		return code.Error(err)
 	}
 	allowance_balance := []byte{} //TODO
-	allowance_balance = utils.Sub(allowance_balance, args.Token)
+	allowance_balance = utils2.Sub(allowance_balance, args.Token)
 	allowance_key := []byte("")
 	ctx.PutObject(allowance_key, to_balance)
 	return code.OK(nil)

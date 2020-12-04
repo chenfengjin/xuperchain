@@ -2,10 +2,9 @@ package main
 
 import (
 	"errors"
-	utils "github.com/xuperchain/xuperchain/core/contractsdk/go"
 	"github.com/xuperchain/xuperchain/core/contractsdk/go/code"
 	"github.com/xuperchain/xuperchain/core/contractsdk/go/driver"
-	"github.com/xuperchain/xuperchain/core/contractsdk/go/unmarshal"
+	"github.com/xuperchain/xuperchain/core/contractsdk/go/utils"
 	"math/rand"
 )
 
@@ -17,10 +16,6 @@ const (
 	TICKETS = "tickets"
 )
 
-var (
-	ErrPermissionDenied = errors.New("only the admin can add new asset type")
-)
-
 type luckDraw struct {
 }
 
@@ -28,7 +23,7 @@ func (ld *luckDraw) Initialize(ctx code.Context) code.Response {
 	args := struct {
 		Admin []byte `json:"admin"`
 	}{}
-	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
+	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	if err := ctx.PutObject(utils.ConcatWithString(ADMIN), args.Admin); err != nil {
@@ -87,12 +82,12 @@ func (ld *luckDraw) StartLuckDraw(ctx code.Context) code.Response {
 		return code.Error(utils.ErrMissingCaller)
 	}
 	if !ld.IsAdmin(ctx, caller) {
-		return code.Error(ErrPermissionDenied)
+		return code.Error(utils.ErrPermissionDenied)
 	}
 	args := struct {
 		Seed []byte `json:"seed",required:"true"`
 	}{}
-	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
+	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	//	TODO seed 的格式

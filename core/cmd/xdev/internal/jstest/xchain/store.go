@@ -4,10 +4,10 @@ import (
 	"math/rand"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/syndtr/goleveldb/leveldb"
-	"github.com/syndtr/goleveldb/leveldb/iterator"
-	"github.com/syndtr/goleveldb/leveldb/storage"
-	"github.com/syndtr/goleveldb/leveldb/util"
+	//"github.com/syndtr/goleveldb/leveldb"
+	//"github.com/syndtr/goleveldb/leveldb/iterator"
+	//"github.com/syndtr/goleveldb/leveldb/storage"
+	//"github.com/syndtr/goleveldb/leveldb/util"
 	"github.com/xuperchain/xuperchain/core/xmodel"
 	xmodel_pb "github.com/xuperchain/xuperchain/core/xmodel/pb"
 )

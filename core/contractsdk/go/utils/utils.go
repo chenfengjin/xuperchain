@@ -1,46 +1,39 @@
-package unmarshal
+package utils
 
 import (
-	"errors"
-	"fmt"
-	"reflect"
+	"github.com/xuperchain/xuperchain/core/contractsdk/go/code"
+	"github.com/xuperchain/xuperchain/core/xmodel"
+	"unsafe"
 )
 
-//遍历struct并且自动进行赋值
-func Validate(data map[string][]byte, inStructPtr interface{}) error {
-	rType := reflect.TypeOf(inStructPtr)
-	rVal := reflect.ValueOf(inStructPtr)
-	if rType.Kind() == reflect.Ptr {
-		// 传入的inStructPtr是指针，需要.Elem()取得指针指向的value
-		rType = rType.Elem()
-		rVal = rVal.Elem()
-	} else {
-		return errors.New("inStructPtr must be ptr to struct")
+const (
+	LittleEndian = iota
+	BigEndian
+)
+
+// error 不为空不代表存在
+// TODO @fengjin check 下
+func CheckExist(ctx code.Context, id []byte) error {
+	_, err := ctx.GetObject(id)
+	if err == nil {
+		return ErrObjectExists
 	}
-	// 遍历结构体
-	for i := 0; i < rType.NumField(); i++ { //TODO @fengjin 添加类型检查·
-		t := rType.Field(i)
-		f := rVal.Field(i)
-		for k, v := range data {
-			if t.Tag.Get("json") != k {
-				continue
-			}
-			f.Set(reflect.ValueOf(v))
-		}
-		break
+	if err == xmodel.ErrNotFound {
+		return nil
 	}
-	//检查所有 required 字段都 ok
-	//考虑字符串为空白的情况
-	for i := 0; i < rType.NumField(); i++ {
-		t := rType.Field(i)
-		f := rVal.Field(i)
-		if required, ok := t.Tag.Lookup("required"); ok && required == "true" {
-			if f.IsNil() {
-				return fmt.Errorf("field %s is required", t.Name)
-			}
-		}
-	}
-	return nil
+	return err
 }
 
-//}
+//TODO 需要仔细确认下
+func getByteOrder() int64 {
+	a := uint64(1)
+	b := (*[8]byte)(unsafe.Pointer(&a))
+	//TODO @fengjin
+	if b[0] == (1) {
+		return 0
+
+	} else {
+		return 0
+	}
+
+}

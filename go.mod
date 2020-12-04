@@ -5,10 +5,10 @@ go 1.12
 require (
 	github.com/BurntSushi/toml v0.3.1
 	github.com/ChainSafe/go-schnorrkel v0.0.0-20200626160457-b38283118816 // indirect
-	github.com/aws/aws-sdk-go v1.29.2
+	github.com/aws/aws-sdk-go v1.29.2 // indirect
 	github.com/btcsuite/btcutil v0.0.0-20190425235716-9e5f4b9a998d
 	github.com/ddliu/motto v0.3.1
-	github.com/dgraph-io/badger/v2 v2.0.0-rc.2
+	github.com/dgraph-io/badger/v2 v2.0.0-rc.2 // indirect
 	github.com/docker/go-connections v0.4.1-0.20180821093606-97c2040d34df // indirect
 	github.com/docker/go-units v0.4.0
 	github.com/fsouza/go-dockerclient v1.6.0
@@ -18,7 +18,7 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/grpc-ecosystem/grpc-gateway v1.9.2
-	github.com/hashicorp/golang-lru v0.5.4
+	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/hyperledger/burrow v0.30.5
 	github.com/ipfs/go-ipfs-addr v0.0.1
 	github.com/ipfs/go-todocounter v0.0.2 // indirect

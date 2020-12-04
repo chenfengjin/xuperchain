@@ -1,0 +1,13 @@
+FROM xuperchain:dev
+RUN rm -rf contractsdk && rm -rf scripts
+COPY core/contractsdk contractsdk
+COPY core/scripts scripts
+COPY vendor vendor
+RUN mkdir -p data/acl
+ENV PATH=${PATH}:/go/src/github.com/xuperchain/xuperchain/core
+#RUN echo $PATH
+RUN echo "XC1111111111111111@xuper/dpzuVdosQrF2kmzumhVeFQZa1aYcdgFpN" > data/acl/addrs
+#RUN bash -c "xchain &  && xchain-cli account new --account 1111111111111111 --fee 2000000"
+#RUN GOOS=js GOARCH=wasm go build
+#RUN xchain-cli wasm deploy --account XC1111111111111111@xuper --runtime go --cname award_manage -m -a '{"creator": "someone"}' -A data/acl/addrs -o tx.output --keys data/keys --name xuper -H localhost:37101
+#CMD xchain

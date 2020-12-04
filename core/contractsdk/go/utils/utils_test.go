@@ -1,4 +1,4 @@
-package unmarshal
+package utils
 
 import (
 	"fmt"
@@ -15,7 +15,6 @@ func TestUnmarshal(t *testing.T) {
 	}
 	v := struct {
 		Name string `json:"name"`
-		//Age  int    `json:"age"`
 	}{}
 	Validate(a, &v)
 	fmt.Println(v.Name)

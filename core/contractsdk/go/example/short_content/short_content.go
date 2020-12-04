@@ -2,10 +2,9 @@ package main
 
 import (
 	"errors"
-	utils "github.com/xuperchain/xuperchain/core/contractsdk/go"
 	"github.com/xuperchain/xuperchain/core/contractsdk/go/code"
 	"github.com/xuperchain/xuperchain/core/contractsdk/go/driver"
-	"github.com/xuperchain/xuperchain/core/contractsdk/go/unmarshal"
+	"github.com/xuperchain/xuperchain/core/contractsdk/go/utils"
 )
 
 const (
@@ -33,7 +32,7 @@ func (sc *shortContent) StoreShortContent(ctx code.Context) code.Response {
 		Topic   []byte `json:"topic",required:"true"`
 		Content []byte `json;"content",required:"true"`
 	}{}
-	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
+	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	userKey := utils.ConcatWithString(USER_BUCKET, "/", args.UserId, "/", args.Topic, "/", args.Title)
@@ -52,7 +51,7 @@ func (sc *shortContent) QueryByUser(ctx code.Context) code.Response {
 	args := struct {
 		UserID []byte `json:"user_id",required:"true"`
 	}{}
-	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
+	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	start := utils.ConcatWithString(USER_BUCKET, "/", args.UserID, "/")
@@ -72,7 +71,7 @@ func (sc *shortContent) QueryByTitle(ctx code.Context) code.Response {
 		Topic  []byte `json:"user_id",required:"true"`
 		Title  []byte `json:"title",required:"true"`
 	}{}
-	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
+	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	value, err := ctx.GetObject(utils.ConcatWithString(USER_BUCKET, "/", args.UserId, "/", args.Topic, "/", args.Title))

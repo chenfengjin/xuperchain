@@ -3,9 +3,9 @@ package main
 import (
 	"bytes"
 	"fmt"
-	utils "github.com/xuperchain/xuperchain/core/contractsdk/go"
 	"github.com/xuperchain/xuperchain/core/contractsdk/go/code"
-	"github.com/xuperchain/xuperchain/core/contractsdk/go/unmarshal"
+	"github.com/xuperchain/xuperchain/core/contractsdk/go/driver"
+	"github.com/xuperchain/xuperchain/core/contractsdk/go/utils"
 	"strings"
 )
 
@@ -24,7 +24,7 @@ func (st *sourceTrace) Initialize(ctx code.Context) code.Response {
 	args := struct {
 		Admin []byte `json:"admin",required:"true"`
 	}{}
-	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
+	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	ctx.PutObject(utils.ConcatWithString(ADMIN), args.Admin)
@@ -49,7 +49,7 @@ func (st *sourceTrace) CreateGoods(ctx code.Context) code.Response {
 		Id   []byte `json:"id",required:"true''"`
 		Desc []byte `json:"desc",required:"desc"`
 	}{}
-	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
+	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	goodsKey := utils.ConcatWithString(GOODS, args.Id)
@@ -65,7 +65,8 @@ func (st *sourceTrace) CreateGoods(ctx code.Context) code.Response {
 	if err := ctx.PutObject(goodsRecordsKey, utils.ConcatWithString(CREATE)); err != nil {
 		return code.Error(err)
 	}
-	if err := ctx.PutObject(goodsRecordsTopKey, 0); err != nil {
+	value := []byte("0") //TODO @fengjin
+	if err := ctx.PutObject(goodsRecordsTopKey, value); err != nil {
 		return code.Error(err)
 	}
 	return code.OK(nil)
@@ -90,7 +91,7 @@ func (st *sourceTrace) updateGoods(ctx code.Context) code.Response {
 		Reason []byte `json:"reason",required:"true"`
 	}{}
 
-	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
+	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	value, err := ctx.GetObject(utils.ConcatWithString(GOODSRECORDTOP, args.Id))
@@ -112,7 +113,7 @@ func (st *sourceTrace) QueryRecords(ctx code.Context) code.Response {
 	args := struct {
 		Id []byte `json:"id",required:"true"`
 	}{}
-	if err := unmarshal.Validate(ctx.Args(), &args); err != nil {
+	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
 	//TODO @fengjin 不存在的时候error 是什么情况呢?
@@ -133,8 +134,12 @@ func (st *sourceTrace) QueryRecords(ctx code.Context) code.Response {
 		goodsId := goodsRecord[:pos]
 		updateRecord := goodsRecord[pos+1:]
 		reason := iter.Value()
-		//result = append(result,utils.ConcatWithString("goodsId=",goodsId,))
+		//result = append(result,utils1.ConcatWithString("goodsId=",goodsId,))
 		result.WriteString(fmt.Sprintf("goodsID=%s,updateRecord=%s,reason=%s,\n", goodsId, updateRecord, reason))
 	}
 	return code.OK(result.Bytes())
+}
+
+func main() {
+	driver.Serve(new(sourceTrace))
 }
