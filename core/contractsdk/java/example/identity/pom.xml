@@ -4,10 +4,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.baidu.xuper</groupId>
-  <artifactId>counter</artifactId>
+  <artifactId>identity</artifactId>
   <version>0.1.0</version>
 
-  <name>counter</name>
+  <name>identity</name>
   <url>https://xuper.baidu.com</url>
 
   <properties>

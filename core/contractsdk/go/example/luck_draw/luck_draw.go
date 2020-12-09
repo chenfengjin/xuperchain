@@ -10,7 +10,7 @@ import (
 
 const (
 	USERID  = "Userid"
-	TICKTID = "Luckid" // copy from cpp code
+	TICKTID = "Luckid" // copy from cpp examples
 	ADMIN   = "admin"
 	RESULT  = "result"
 	TICKETS = "tickets"
@@ -91,14 +91,16 @@ func (ld *luckDraw) StartLuckDraw(ctx code.Context) code.Response {
 		return code.Error(err)
 	}
 	//	TODO seed 的格式
-	lastId, err := ctx.GetObject(utils.ConcatWithString(TICKETS))
-	if err != nil {
-		return code.Error(err)
-	}
+	//lastId, err := ctx.GetObject(utils.ConcatWithString(TICKETS))
+	//if err != nil {
+	//	return code.Error(err)
+	//}
 	rand.Seed(int64((1)))
 	//rand.Seed(args.Seed) // TODO @fengjin
-	luckid := rand.Int63()%int64(lastId) + 1 //TODO @fengjin
-	//	if lastid==0??
+	//luckid := rand.Int63()%int64(lastId) + 1 //TODO @fengjin
+	luckid := rand.Int63()%int64(10) + 1 //TODO @fengjin
+
+	//if lastid==0??
 	if luckUser, err := ctx.GetObject(utils.ConcatWithString(TICKTID, luckid)); err != nil {
 		return code.Error(err)
 	} else {

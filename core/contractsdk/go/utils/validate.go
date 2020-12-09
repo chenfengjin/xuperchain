@@ -1,24 +1,36 @@
 package utils
 
 import (
+	"bytes"
+	"encoding/binary"
 	"errors"
 	"fmt"
 	"reflect"
+	"strconv"
 )
 
-//遍历struct并且自动进行赋值
+func byteToInt64(b []byte) int64 {
+	bytebuff := bytes.NewBuffer(b)
+	var data int64
+	byteOrder := binary.LittleEndian
+	if x {
+		byteOrder = binary.BigEndian
+	}
+	binary.Read(bytebuff, binary.BigEndian, &data)
+	return data
+}
+
 func Validate(data map[string][]byte, inStructPtr interface{}) error {
 	rType := reflect.TypeOf(inStructPtr)
 	rVal := reflect.ValueOf(inStructPtr)
 	if rType.Kind() == reflect.Ptr {
-		// 传入的inStructPtr是指针，需要.Elem()取得指针指向的value
 		rType = rType.Elem()
 		rVal = rVal.Elem()
 	} else {
 		return errors.New("inStructPtr must be ptr to struct")
 	}
-	// 遍历结构体
-	for i := 0; i < rType.NumField(); i++ { //TODO @fengjin 添加类型检查·
+
+	for i := 0; i < rType.NumField(); i++ {
 		t := rType.Field(i)
 		f := rVal.Field(i)
 		for k, v := range data {
@@ -26,8 +38,52 @@ func Validate(data map[string][]byte, inStructPtr interface{}) error {
 				continue
 			}
 			f.Set(reflect.ValueOf(v))
+
+			ltStr, ok := t.Tag.Lookup("lt")
+			if ok {
+				value := byteToInt64(v)
+				lt, err := strconv.ParseInt(ltStr, 10, 64)
+				if err != nil {
+					return err
+				}
+				if value >= lt {
+					return fmt.Errorf("%s must be less than %s", t.Name, ltStr)
+				}
+			}
+			gtStr, ok := t.Tag.Lookup(("gt"))
+			if ok {
+				value := byteToInt64(v)
+				gt, err := strconv.ParseInt(gtStr, 10, 64)
+				if err != nil {
+					return err
+				}
+				if value <= gt {
+					return fmt.Errorf("%s must be greater than %s", t.Name, ltStr)
+				}
+			}
+			leStr, ok := t.Tag.Lookup("le")
+			if ok {
+				value := byteToInt64(v)
+				le, err := strconv.ParseInt(leStr, 10, 64)
+				if err != nil {
+					return err
+				}
+				if value > le {
+					return fmt.Errorf("%s must be less than or equal to %s", t.Name, ltStr)
+				}
+			}
+			geStr, ok := t.Tag.Lookup("ge")
+			if ok {
+				value := byteToInt64(v)
+				ge, err := strconv.ParseInt(geStr, 10, 64)
+				if err != nil {
+					return err
+				}
+				if value < ge {
+					return errors.New("")
+				}
+			}
 		}
-		break
 	}
 	//检查所有 required 字段都 ok
 	//考虑字符串为空白的情况

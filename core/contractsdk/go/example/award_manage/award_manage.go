@@ -15,15 +15,11 @@ const (
 	MASTERPRE    = "owner"
 )
 
-var (
-	ErrBalanceNotMeet = errors.New("your balance has no enough amount")
-)
-
 type awardManage struct{}
 
 func (am *awardManage) Initialize(ctx code.Context) code.Response {
 	args := struct {
-		totalSupply []byte `json:"totalSupply",lt:"0"`
+		totalSupply []byte `json:"totalSupply",gt:"0"`
 	}{}
 	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
@@ -170,7 +166,7 @@ func (am *awardManage) TransferFrom(ctx code.Context) code.Response {
 
 	}
 	if utils2.Compare(value, args.Token) < 0 {
-		return code.Error(ErrBalanceNotMeet)
+		return code.Error(utils.ErrBalanceLow)
 	}
 
 	from_balance, err := ctx.GetObject([]byte(BALANCEPRE + args.From))
@@ -178,7 +174,7 @@ func (am *awardManage) TransferFrom(ctx code.Context) code.Response {
 		return code.Error(err)
 	}
 	if utils2.Compare(from_balance, args.Token) < 0 {
-		return code.Error(ErrBalanceNotMeet)
+		return code.Error(utils.ErrBalanceLow)
 	}
 	to_balance, err := ctx.GetObject([]byte(BALANCEPRE + args.To))
 	if err != nil {
@@ -216,10 +212,10 @@ func (am *awardManage) Approve(ctx code.Context) code.Response {
 	}
 
 	if utils2.Compare(value, args.Token) < 0 {
-		return code.Error(ErrBalanceNotMeet)
+		return code.Error(utils.ErrBalanceLow)
 	}
 	if utils2.Compare(from_balance, args.Token) < 0 {
-		return code.Error(ErrBalanceNotMeet)
+		return code.Error(utils.ErrBalanceLow)
 	}
 	to_balance, err := ctx.GetObject(utils2.ConcatWithString(BALANCEPRE, args.To))
 	if err != nil {

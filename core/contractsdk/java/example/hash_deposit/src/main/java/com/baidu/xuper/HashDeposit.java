@@ -45,7 +45,7 @@ public class HashDeposit implements Contract {
         String start = "";
         String end = "";
        Iterator<ContractIteratorItem> iter = ctx.newIterator(start.getBytes(),end.getBytes());
-       final ByteBuffer result = new ByteBuffer(0,0,0,0;
+       final ByteBuffer result = new ByteBuffer(0,0,0,0);
        iter.forEachRemaining(
                contractIteratorItem -> {
                    byte[]key = contractIteratorItem.getKey();
