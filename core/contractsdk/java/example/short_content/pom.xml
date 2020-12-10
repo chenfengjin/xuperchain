@@ -4,10 +4,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.baidu.xuper</groupId>
-  <artifactId>shot_content</artifactId>
+  <artifactId>short_content</artifactId>
   <version>0.1.0</version>
 
-  <name>shot_content</name>
+  <name>short_content</name>
   <url>https://xuper.baidu.com</url>
 
   <properties>

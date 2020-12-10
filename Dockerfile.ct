@@ -1,12 +1,13 @@
+
+#for contract development, only sync contract related files(config/script/contract/compiler)
 FROM xuperchain:dev
-RUN apt install -y  openjdk-11-jre
 RUN rm -rf contractsdk && rm -rf scripts && rm -rf ../vendor && rm -rf conf
 COPY core/conf conf
 COPY core/contractsdk contractsdk
 COPY core/scripts scripts
-RUN echo $PWD
-COPY vendor ../vendor
+COPY bin/solc .
 RUN mkdir -p data/acl
 ENV PATH=${PATH}:/go/src/github.com/xuperchain/xuperchain/core
+# TODO@fengjin 这个不是很好
 RUN echo "XC1111111111111111@xuper/dpzuVdosQrF2kmzumhVeFQZa1aYcdgFpN" > data/acl/addrs
 CMD ["dlv", "--listen=:40000", "--headless=true", "--api-version=2", "--accept-multiclient", "exec", "./xchain"]
