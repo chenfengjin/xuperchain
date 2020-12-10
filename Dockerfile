@@ -1,5 +1,7 @@
 FROM golang:1.13.2
 RUN apt update
+RUN apt install -y  openjdk-11-jre
+
 WORKDIR /go/src/github.com/xuperchain/xuperchain
 COPY . .
 RUN make clean
