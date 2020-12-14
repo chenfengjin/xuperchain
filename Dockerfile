@@ -11,7 +11,7 @@ RUN go get github.com/go-delve/delve/cmd/dlv
 
 RUN go build -mod=vendor -o core/xchain-cli github.com/xuperchain/xuperchain/core/cmd/cli
 RUN go build -mod=vendor -o core/xchain github.com/xuperchain/xuperchain/core/cmd/xchain
-RUN go build -mod=vendor -o core/xchain github.com/xuperchain/xuperchain/core/cmd/xdev
+RUN go build -mod=vendor -o core/xdev github.com/xuperchain/xuperchain/core/cmd/xdev
 RUN make -C core/xvm/compile/wabt -j 8 && cp core/xvm/compile/wabt/build/wasm2c /bin
 
 RUN mkdir -p core/plugins/kv core/plugins/crypto core/plugins/consensus core/plugins/contract
