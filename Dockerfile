@@ -1,4 +1,5 @@
 FROM golang:1.13.2
+RUN sed -i 's#http://deb.debian.org#https://mirrors.163.com#g' /etc/apt/sources.list && apt update
 RUN apt update && apt install -y  openjdk-11-jre gdbserver cmake make vim
 
 WORKDIR /go/src/github.com/xuperchain/xuperchain
