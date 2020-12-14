@@ -84,7 +84,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>com.baidu.xuper.example.Counter</mainClass>
+              <mainClass>com.baidu.xuper.luckydraw</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>
