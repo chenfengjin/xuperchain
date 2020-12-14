@@ -1,6 +1,6 @@
 
 /// @dev Models a uint -> uint mapping where it is possible to iterate over all keys.
-pragma solidity ^0.7.5;
+//pragma solidity 0.5.17;
 library IterableMapping
 {
     struct itmap

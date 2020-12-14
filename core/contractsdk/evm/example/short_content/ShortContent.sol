@@ -1,4 +1,4 @@
-pragma solidity >=0.0.0;
+//pragma solidity 0.5.17-develop.2020.12.11+commit.d19bba13.mod.Linux.g++;
 import "iterable_mapping.sol" as it_mapping;
 import "strings.sol";
 
@@ -6,7 +6,7 @@ import "strings.sol";
 contract ShortContent {
     using strings for *;
     it_mapping.IterableMapping.itmap data;
-    string  UserBucket = "USER_";
+    string  UserBucket = "USER";
     uint256 TOPIC_LENGTH_LIMIT = 36;
     uint256 TITLE_LENGTH_LIMIT = 100;
     uint256 CONTENT_LENGTH_LIMIT = 3000;
@@ -21,13 +21,11 @@ contract ShortContent {
         it_mapping.IterableMapping.insert(data,key,content);
     }
     function queryByUser(string memory user_id) public returns (string memory result){
-//        string memory result=";
         string memory key = string(abi.encodePacked(UserBucket,"/",user_id,"/"));
         for (uint256 i = it_mapping.IterableMapping.iterate_start(data); it_mapping.IterableMapping.iterate_valid(data, i); i = it_mapping.IterableMapping.iterate_next(data, i))
         {
             (string memory k,string  memory v )= it_mapping.IterableMapping.iterate_get(data, i);
             if (k.toSlice().startsWith(key.toSlice())){
-//                result.toSlice().concat (v.toSlice());
             }
         }
     }

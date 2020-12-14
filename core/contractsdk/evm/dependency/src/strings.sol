@@ -35,7 +35,7 @@
  */
 
 //TODO @fengjin 原来是0.4.14，需要确认下兼容
-pragma solidity ^0.7.5;
+//pragma solidity 0.5.17;
 
 library strings {
     struct slice {
