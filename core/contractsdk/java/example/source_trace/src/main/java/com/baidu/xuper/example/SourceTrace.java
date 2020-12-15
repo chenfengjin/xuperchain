@@ -9,16 +9,35 @@ import com.baidu.xuper.Contract;
 import com.baidu.xuper.ContractMethod;
 import com.baidu.xuper.Driver;
 import com.baidu.xuper.Response;
+import com.baidu.xuper.utils.ByteUtils;
 
 /**
  * Counter
  */
-public class Counter implements Contract {
+public class SourceTrace implements Contract {
+    final String GOODS = "GOODS_";
+    final String GOODSRECORD = "GOODSRECORD_";
+    final String GOODSRECORDTOP = "GOODSRECORDTOP_";
+    final String CREATE = "CREATE_";
 
     @Override
     @ContractMethod
     public Response initialize(Context ctx) {
+        byte[] admin = ctx.args().get("admin".getBytes());
+        if (admin.length == 0){
+            return Response.error("missing admin address");
+        }
+        ctx.putObject("admin".getBytes(),admin);
         return Response.ok("ok".getBytes());
+    }
+    private boolean isAdmin(Context ctx, String caller){
+        byte[]admin = ctx.getObject("admin".getBytes());
+        return ByteUtils.Equal(admin,caller);
+
+    }
+    private boolean isAdmin(Context ctx){
+        String caller = ctx.caller();
+        return isAdmin(ctx,caller);
     }
 
     @ContractMethod

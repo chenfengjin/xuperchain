@@ -4,10 +4,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.baidu.xuper</groupId>
-  <artifactId>counter</artifactId>
+  <artifactId>charity_demo</artifactId>
   <version>0.1.0</version>
 
-  <name>counter</name>
+  <name>charity_demo</name>
   <url>https://xuper.baidu.com</url>
 
   <properties>
@@ -27,6 +27,8 @@
       <groupId>com.baidu.xuper</groupId>
       <artifactId>java-contract-sdk</artifactId>
       <version>0.1.0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../../target/java-contract-sdk-0.1.0.jar</systemPath>
     </dependency>
   </dependencies>
 
@@ -84,7 +86,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>com.baidu.xuper.example.Counter</mainClass>
+              <mainClass>com.baidu.xuper.example.CharityDemo</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>
@@ -100,6 +102,14 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>8</source>
+          <target>8</target>
+        </configuration>
       </plugin>
     </plugins>
   </build>
