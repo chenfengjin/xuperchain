@@ -26,10 +26,10 @@ func (ld *luckDraw) Initialize(ctx code.Context) code.Response {
 	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	if err := ctx.PutObject(utils.ConcatWithString(ADMIN), args.Admin); err != nil {
+	if err := ctx.PutObject(utils.Concat(ADMIN), args.Admin); err != nil {
 		return code.Error(err)
 	}
-	err := ctx.PutObject(utils.ConcatWithString("tickets"), utils.ConcatWithString("0"))
+	err := ctx.PutObject(utils.Concat("tickets"), utils.Concat("0"))
 	if err != nil {
 		return code.Error(err)
 	}
@@ -38,7 +38,7 @@ func (ld *luckDraw) Initialize(ctx code.Context) code.Response {
 
 // TODO @fengjin 这里的 caller 什么意思呢,以及类型？
 func (ld *luckDraw) IsAdmin(ctx code.Context, caller string) bool {
-	admin, err := ctx.GetObject(utils.ConcatWithString(ADMIN))
+	admin, err := ctx.GetObject(utils.Concat(ADMIN))
 	if err != nil {
 		return false
 	}
@@ -50,26 +50,26 @@ func (ld *luckDraw) GetLuckId(ctx code.Context) code.Response {
 	if caller == "" {
 		return code.Error(utils.ErrMissingCaller)
 	}
-	_, err := ctx.GetObject(utils.ConcatWithString(RESULT))
+	_, err := ctx.GetObject(utils.Concat(RESULT))
 	if err == nil { //TODO @fengjin
 		return code.Error(errors.New(" the lock draw is finished"))
 	}
-	if userVal, err := ctx.GetObject(utils.ConcatWithString(USERID, caller)); err != nil {
+	if userVal, err := ctx.GetObject(utils.Concat(USERID, caller)); err != nil {
 		return code.OK(userVal)
 	}
-	lastId, err := ctx.GetObject(utils.ConcatWithString(TICKETS))
+	lastId, err := ctx.GetObject(utils.Concat(TICKETS))
 	if err != nil {
 		return code.Error(err)
 	}
 	lastId = utils.Add(lastId, []byte("1"))
 	{
-		if err := ctx.PutObject(utils.ConcatWithString(USERID, caller), lastId); err != nil {
+		if err := ctx.PutObject(utils.Concat(USERID, caller), lastId); err != nil {
 			return code.Error(err)
 		}
-		if err := ctx.PutObject(utils.ConcatWithString(TICKTID, lastId), utils.ConcatWithString(caller)); err != nil {
+		if err := ctx.PutObject(utils.Concat(TICKTID, lastId), utils.Concat(caller)); err != nil {
 			return code.Error(err)
 		}
-		if err := ctx.PutObject(utils.ConcatWithString(TICKETS), lastId); err != nil {
+		if err := ctx.PutObject(utils.Concat(TICKETS), lastId); err != nil {
 			return code.Error(err)
 		}
 	}
@@ -91,7 +91,7 @@ func (ld *luckDraw) StartLuckDraw(ctx code.Context) code.Response {
 		return code.Error(err)
 	}
 	//	TODO seed 的格式
-	//lastId, err := ctx.GetObject(utils.ConcatWithString(TICKETS))
+	//lastId, err := ctx.GetObject(utils.Concat(TICKETS))
 	//if err != nil {
 	//	return code.Error(err)
 	//}
@@ -101,7 +101,7 @@ func (ld *luckDraw) StartLuckDraw(ctx code.Context) code.Response {
 	luckid := rand.Int63()%int64(10) + 1 //TODO @fengjin
 
 	//if lastid==0??
-	if luckUser, err := ctx.GetObject(utils.ConcatWithString(TICKTID, luckid)); err != nil {
+	if luckUser, err := ctx.GetObject(utils.Concat(TICKTID, luckid)); err != nil {
 		return code.Error(err)
 	} else {
 		return code.OK(luckUser)
@@ -109,7 +109,7 @@ func (ld *luckDraw) StartLuckDraw(ctx code.Context) code.Response {
 }
 
 func (ld *luckDraw) GetResult(ctx code.Context) code.Response {
-	if luckUser, err := ctx.GetObject(utils.ConcatWithString(RESULT)); err != nil {
+	if luckUser, err := ctx.GetObject(utils.Concat(RESULT)); err != nil {
 		return code.Error(err)
 	} else {
 		return code.OK(luckUser)

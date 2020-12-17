@@ -145,7 +145,6 @@ public class CharityDemo implements Contract {
                             "id="+donateId+","+
                                     "content="+content+"\n"
                     ).getBytes());
-
                 }
         );
         return Response.ok(buf.elems); // TODO @fengjin
@@ -215,9 +214,6 @@ public class CharityDemo implements Contract {
         );
         return Response.ok(buf.elems);
     }
-
-
-
 
 
     public static void main(String[] args) {

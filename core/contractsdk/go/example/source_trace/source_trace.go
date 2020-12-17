@@ -27,7 +27,7 @@ func (st *sourceTrace) Initialize(ctx code.Context) code.Response {
 	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	ctx.PutObject(utils.ConcatWithString(ADMIN), args.Admin)
+	ctx.PutObject(utils.Concat(ADMIN), args.Admin)
 	return code.OK(nil)
 }
 
@@ -37,7 +37,7 @@ func (st *sourceTrace) CreateGoods(ctx code.Context) code.Response {
 		return code.Error(utils.ErrMissingCaller)
 	}
 
-	admin, err := ctx.GetObject(utils.ConcatWithString(ADMIN))
+	admin, err := ctx.GetObject(utils.Concat(ADMIN))
 	if err != nil {
 		return code.Error(err)
 	}
@@ -52,7 +52,7 @@ func (st *sourceTrace) CreateGoods(ctx code.Context) code.Response {
 	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	goodsKey := utils.ConcatWithString(GOODS, args.Id)
+	goodsKey := utils.Concat(GOODS, args.Id)
 	if err := utils.CheckExist(ctx, goodsKey); err != nil {
 		return code.Error(err)
 	}
@@ -60,9 +60,9 @@ func (st *sourceTrace) CreateGoods(ctx code.Context) code.Response {
 		return code.Error(err)
 	}
 
-	goodsRecordsKey := utils.ConcatWithString(GOODSRECORD, args.Id, "_0")
-	goodsRecordsTopKey := utils.ConcatWithString(GOODSRECORDTOP, args.Id)
-	if err := ctx.PutObject(goodsRecordsKey, utils.ConcatWithString(CREATE)); err != nil {
+	goodsRecordsKey := utils.Concat(GOODSRECORD, args.Id, "_0")
+	goodsRecordsTopKey := utils.Concat(GOODSRECORDTOP, args.Id)
+	if err := ctx.PutObject(goodsRecordsKey, utils.Concat(CREATE)); err != nil {
 		return code.Error(err)
 	}
 	value := []byte("0") //TODO @fengjin
@@ -78,7 +78,7 @@ func (st *sourceTrace) updateGoods(ctx code.Context) code.Response {
 		return code.Error(utils.ErrMissingCaller)
 	}
 
-	admin, err := ctx.GetObject(utils.ConcatWithString(ADMIN))
+	admin, err := ctx.GetObject(utils.Concat(ADMIN))
 	if err != nil {
 		return code.Error(err)
 	}
@@ -94,16 +94,16 @@ func (st *sourceTrace) updateGoods(ctx code.Context) code.Response {
 	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	value, err := ctx.GetObject(utils.ConcatWithString(GOODSRECORDTOP, args.Id))
+	value, err := ctx.GetObject(utils.Concat(GOODSRECORDTOP, args.Id))
 	if err != nil {
 		return code.Error(err)
 	}
 	topRecord := utils.Add(value, []byte("1"))
 
-	if err := ctx.PutObject(utils.ConcatWithString(GOODSRECORD, args.Id, "_", topRecord), args.Reason); err != nil {
+	if err := ctx.PutObject(utils.Concat(GOODSRECORD, args.Id, "_", topRecord), args.Reason); err != nil {
 		return code.Error(err)
 	}
-	if err := ctx.PutObject(utils.ConcatWithString(GOODSRECORDTOP, args.Id), topRecord); err != nil {
+	if err := ctx.PutObject(utils.Concat(GOODSRECORDTOP, args.Id), topRecord); err != nil {
 		return code.Error(err)
 	}
 	return code.OK(topRecord)
@@ -117,14 +117,14 @@ func (st *sourceTrace) QueryRecords(ctx code.Context) code.Response {
 		return code.Error(err)
 	}
 	//TODO @fengjin 不存在的时候error 是什么情况呢?
-	value, err := ctx.GetObject(utils.ConcatWithString(GOODS, args.Id))
+	value, err := ctx.GetObject(utils.Concat(GOODS, args.Id))
 	_ = value // TODO @fengjin
 	if err != nil {
 		return code.Error(err)
 	}
-	goodsRecordsKey := utils.ConcatWithString(GOODSRECORD, args.Id, "_")
+	goodsRecordsKey := utils.Concat(GOODSRECORD, args.Id, "_")
 	start := goodsRecordsKey
-	end := utils.ConcatWithString(start, "~")
+	end := utils.Concat(start, "~")
 	iter := ctx.NewIterator(start, end)
 	result := bytes.NewBuffer(nil)
 	for iter.Next() {
@@ -134,7 +134,7 @@ func (st *sourceTrace) QueryRecords(ctx code.Context) code.Response {
 		goodsId := goodsRecord[:pos]
 		updateRecord := goodsRecord[pos+1:]
 		reason := iter.Value()
-		//result = append(result,utils1.ConcatWithString("goodsId=",goodsId,))
+		//result = append(result,utils1.Concat("goodsId=",goodsId,))
 		result.WriteString(fmt.Sprintf("goodsID=%s,updateRecord=%s,reason=%s,\n", goodsId, updateRecord, reason))
 	}
 	return code.OK(result.Bytes())

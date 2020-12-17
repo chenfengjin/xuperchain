@@ -25,7 +25,7 @@ func (ga *gameAssets) Initialize(ctx code.Context) code.Response {
 	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	if err := ctx.PutObject(utils2.ConcatWithString(ADMIN), args.Admin); err != nil {
+	if err := ctx.PutObject(utils2.Concat(ADMIN), args.Admin); err != nil {
 		return code.Error(err)
 	} else {
 		return code.OK(nil)
@@ -35,7 +35,7 @@ func (ga *gameAssets) Initialize(ctx code.Context) code.Response {
 
 //TODO @fengjin
 func (ga *gameAssets) isAdmin(ctx code.Context, caller string) bool {
-	admin, err := ctx.GetObject(utils2.ConcatWithString(ADMIN))
+	admin, err := ctx.GetObject(utils2.Concat(ADMIN))
 	if err != nil {
 		//TODO 错误处理
 		//return
@@ -58,7 +58,7 @@ func (ga *gameAssets) AddAssetType(ctx code.Context) code.Response {
 	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	assetKey := utils2.ConcatWithString(ASSETTYPE, args.TypeID)
+	assetKey := utils2.Concat(ASSETTYPE, args.TypeID)
 	if err := utils2.CheckExist(ctx, assetKey); err != nil {
 		return code.Error(err)
 	}
@@ -69,13 +69,13 @@ func (ga *gameAssets) AddAssetType(ctx code.Context) code.Response {
 }
 
 func (ga *gameAssets) ListAssetType(ctx code.Context) code.Response {
-	start := utils2.ConcatWithString(ASSETTYPE)
-	end := utils2.ConcatWithString(ASSETTYPE, "~")
+	start := utils2.Concat(ASSETTYPE)
+	end := utils2.Concat(ASSETTYPE, "~")
 	iter := ctx.NewIterator(start, end)
 	result := []byte{}
 	for iter.Next() {
 		if len(iter.Key()) > len(ASSETTYPE) {
-			//result = append(result, utils2.ConcatWithString(iter.Key()[:len([]byte(ASSETTYPE):],":",iter.Value(),"\n")))
+			//result = append(result, utils2.Concat(iter.Key()[:len([]byte(ASSETTYPE):],":",iter.Value(),"\n")))
 		}
 	}
 	return code.OK(result)
@@ -103,9 +103,9 @@ func (ga *gameAssets) getAssetByUser(ctx code.Context) code.Response {
 	if args.UserID != nil && len(args.UserID) > 0 {
 		userId = args.UserID
 	}
-	userAssetKey := utils2.ConcatWithString(USERASSET, userId, "_")
+	userAssetKey := utils2.Concat(USERASSET, userId, "_")
 	start := userAssetKey
-	end := utils2.ConcatWithString(start, "~")
+	end := utils2.Concat(start, "~")
 	iter := ctx.NewIterator(start, end)
 	result := []byte{}
 	//迭代获取也好重复
@@ -113,12 +113,12 @@ func (ga *gameAssets) getAssetByUser(ctx code.Context) code.Response {
 		if len(iter.Key()) > len(userAssetKey) {
 			assetId := iter.Key()[len(userAssetKey)]
 			typeId := iter.Value()
-			assetTypeKey := utils2.ConcatWithString(ASSETTYPE, typeId)
+			assetTypeKey := utils2.Concat(ASSETTYPE, typeId)
 			if assetDesc, err := ctx.GetObject(assetTypeKey); err != nil {
 				continue
 				//	TODO @fengjin
 			} else {
-				result = append(result, utils2.ConcatWithString("assetid=", assetId, ",typeid=", typeId, ",assetDesc=", assetDesc, "\n")...)
+				result = append(result, utils2.Concat("assetid=", assetId, ",typeid=", typeId, ",assetDesc=", assetDesc, "\n")...)
 			}
 		}
 	}
@@ -141,12 +141,12 @@ func (ga *gameAssets) NewAssetToUser(ctx code.Context) code.Response {
 	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	assetKey := utils2.ConcatWithString(ASSET2USER, args.AssetId)
+	assetKey := utils2.Concat(ASSET2USER, args.AssetId)
 	_, err := ctx.GetObject(assetKey)
 	if err != nil {
 		return code.Error(err)
 	}
-	userAssetKey := utils2.ConcatWithString(USERASSET, args.UserId, "_", args.AssetId)
+	userAssetKey := utils2.Concat(USERASSET, args.UserId, "_", args.AssetId)
 
 	if err := ctx.PutObject(userAssetKey, args.TypeId); err != nil {
 		return code.Error(err)
@@ -169,7 +169,7 @@ func (ga *gameAssets) TradeAsset(ctx code.Context) code.Response {
 	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	userAssetKey := utils2.ConcatWithString(USERASSET, from, "_", args.AssetId)
+	userAssetKey := utils2.Concat(USERASSET, from, "_", args.AssetId)
 	assetType, err := ctx.GetObject(userAssetKey)
 	if err != nil {
 		return code.Error(err)
@@ -178,8 +178,8 @@ func (ga *gameAssets) TradeAsset(ctx code.Context) code.Response {
 		return code.Error(err)
 	}
 
-	assetKey := utils2.ConcatWithString(ASSET2USER, args.AssetId)
-	newuserAssetKey := utils2.ConcatWithString(USERASSET, args.To, "_", args.AssetId)
+	assetKey := utils2.Concat(ASSET2USER, args.AssetId)
+	newuserAssetKey := utils2.Concat(USERASSET, args.To, "_", args.AssetId)
 	if err := ctx.PutObject(newuserAssetKey, assetType); err != nil {
 		return code.Error(err)
 	}

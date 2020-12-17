@@ -9,17 +9,14 @@ func Add(a, b interface{}) []byte {
 
 func Sub(a, b interface{}) []byte {
 	return nil
-
 }
 
 //both a and b are int string byte slice
 func Compare(a, b interface{}) int {
-	//binary.LittleEndian.Uint16()
 	return 0
-
 }
 
-func ConcatWithString(elems ...interface{}) []byte {
+func Concat(elems ...interface{}) []byte {
 	buf := bytes.NewBuffer(nil)
 	for _, elem := range elems {
 		switch elem.(type) {

@@ -1,6 +1,6 @@
 #include "xchain/xchain.h"
 
-const std::string TICKETID = "Luckid_";
+const std::string TICKETID = "ticketId";
 const std::string USERID = "Userid_";
 const std::string ADMIN = "admin";
 const std::string RESULT = "result";
@@ -67,7 +67,7 @@ public:
         // 检查是否存在抽奖结果，如果存在则不再继续发放奖券
         std::string result;
         if (ctx->get_object(RESULT, &result)) {
-            ctx->error("this luck draw is finished");
+            ctx->error("this luck draw has finished");
             return;
         }
 

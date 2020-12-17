@@ -23,7 +23,7 @@ func (sr *scoreRecord) Initialize(ctx code.Context) code.Response {
 	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	if err := ctx.PutObject(utils2.ConcatWithString(OWNER_KEY), args.Owner); err != nil {
+	if err := ctx.PutObject(utils2.Concat(OWNER_KEY), args.Owner); err != nil {
 		return code.Error(err)
 	}
 	return code.OK(nil)
@@ -34,7 +34,7 @@ func (sc *scoreRecord) AddScore(ctx code.Context) code.Response {
 	if caller == "" {
 		return code.Error(utils2.ErrMissingCaller)
 	}
-	owner, err := ctx.GetObject(utils2.ConcatWithString(OWNER_KEY))
+	owner, err := ctx.GetObject(utils2.Concat(OWNER_KEY))
 	if err != nil {
 		return code.Error(err)
 	}
@@ -48,7 +48,7 @@ func (sc *scoreRecord) AddScore(ctx code.Context) code.Response {
 	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	if err := ctx.PutObject(utils2.ConcatWithString(RECORD_KEY, args.UserId), args.Data); err != nil {
+	if err := ctx.PutObject(utils2.Concat(RECORD_KEY, args.UserId), args.Data); err != nil {
 		return code.Error(err)
 	}
 	return code.OK(nil)
@@ -61,7 +61,7 @@ func (sr *scoreRecord) QueryScore(ctx code.Context) code.Response {
 	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	if data, err := ctx.GetObject(utils2.ConcatWithString(RECORD_KEY, args.UserId)); err != nil {
+	if data, err := ctx.GetObject(utils2.Concat(RECORD_KEY, args.UserId)); err != nil {
 		return code.Error(err)
 	} else {
 		return code.OK(data)
@@ -69,7 +69,7 @@ func (sr *scoreRecord) QueryScore(ctx code.Context) code.Response {
 }
 
 func (sr *scoreRecord) QueryOwner(ctx code.Context) code.Response {
-	owner, err := ctx.GetObject(utils2.ConcatWithString(OWNER_KEY))
+	owner, err := ctx.GetObject(utils2.Concat(OWNER_KEY))
 	if err != nil {
 		return code.Error(err)
 	}

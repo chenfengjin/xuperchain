@@ -1,8 +1,10 @@
+/Users/chenfengjin/baidu/xuperchain/core/contractsdk/java/src/main/java/com/baidu/xuper/utils/ByteUtils.java
 /Users/chenfengjin/baidu/xuperchain/core/contractsdk/java/src/main/java/com/baidu/xuper/ContextImpl.java
 /Users/chenfengjin/baidu/xuperchain/core/contractsdk/java/src/main/java/com/baidu/xuper/Contract.java
 /Users/chenfengjin/baidu/xuperchain/core/contractsdk/java/target/generated-sources/protobuf/grpc-java/com/baidu/xuper/contractpb/SyscallGrpc.java
 /Users/chenfengjin/baidu/xuperchain/core/contractsdk/java/src/main/java/com/baidu/xuper/Driver.java
 /Users/chenfengjin/baidu/xuperchain/core/contractsdk/java/src/main/java/com/baidu/xuper/ContractMethod.java
+/Users/chenfengjin/baidu/xuperchain/core/contractsdk/java/src/main/java/com/baidu/xuper/ContractIteratorItem.java
 /Users/chenfengjin/baidu/xuperchain/core/contractsdk/java/src/main/java/com/baidu/xuper/ContractIterator.java
 /Users/chenfengjin/baidu/xuperchain/core/contractsdk/java/target/generated-sources/protobuf/java/com/baidu/xuper/contractpb/ContractService.java
 /Users/chenfengjin/baidu/xuperchain/core/contractsdk/java/target/generated-sources/protobuf/grpc-java/com/baidu/xuper/contractpb/NativeCodeGrpc.java

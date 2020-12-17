@@ -82,6 +82,7 @@ com/baidu/xuper/contractpb/Contract$GetCallArgsRequest$1.class
 com/baidu/xuper/contractpb/Contract$PutRequestOrBuilder.class
 com/baidu/xuper/contractpb/Contract$TxOutputOrBuilder.class
 com/baidu/xuper/contractpb/Contract$GetRequest$Builder.class
+com/baidu/xuper/utils/ByteUtils.class
 com/baidu/xuper/contractpb/Contract$PostLogResponse$Builder.class
 com/baidu/xuper/contractpb/Contract$ArgPair$Builder.class
 com/baidu/xuper/contractpb/Contract$SetOutputResponseOrBuilder.class

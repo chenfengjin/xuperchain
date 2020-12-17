@@ -28,27 +28,27 @@ var (
 )
 
 func (cd *charityDonation) Initialize(ctx code.Context) code.Response {
-	admin, err := ctx.GetObject(utils.ConcatWithString(ADMIN))
+	admin, err := ctx.GetObject(utils.Concat(ADMIN))
 	if err != nil { // 这里的err 什么情况，不存在会是err么？
 		return code.Error(err)
 	}
 	//TODO using batch put
-	if err := ctx.PutObject(utils.ConcatWithString(ADMIN), admin); err != nil {
+	if err := ctx.PutObject(utils.Concat(ADMIN), admin); err != nil {
 		return code.Error(err)
 	}
-	if err := ctx.PutObject(utils.ConcatWithString(TOTAL_RECEIVED), utils.ConcatWithString("0")); err != nil {
+	if err := ctx.PutObject(utils.Concat(TOTAL_RECEIVED), utils.Concat("0")); err != nil {
 		return code.Error(err)
 	}
-	if err := ctx.PutObject(utils.ConcatWithString(TOTAL_COSTS), utils.ConcatWithString("0")); err != nil {
+	if err := ctx.PutObject(utils.Concat(TOTAL_COSTS), utils.Concat("0")); err != nil {
 		return code.Error(err)
 	}
-	if err := ctx.PutObject(utils.ConcatWithString(BALANCE), utils.ConcatWithString("0")); err != nil {
+	if err := ctx.PutObject(utils.Concat(BALANCE), utils.Concat("0")); err != nil {
 		return code.Error(err)
 	}
-	if err := ctx.PutObject(utils.ConcatWithString(DONATE_COUNT), utils.ConcatWithString("0")); err != nil {
+	if err := ctx.PutObject(utils.Concat(DONATE_COUNT), utils.Concat("0")); err != nil {
 		return code.Error(err)
 	}
-	if err := ctx.PutObject(utils.ConcatWithString(COST_COUNT), utils.ConcatWithString("0")); err != nil {
+	if err := ctx.PutObject(utils.Concat(COST_COUNT), utils.Concat("0")); err != nil {
 		return code.Error(err)
 	}
 	return code.OK(nil)
@@ -81,9 +81,9 @@ func (cd *charityDonation) Donate(ctx code.Context) code.Response {
 	balance := utils.Add(in[BALANCE], args.Amount)
 	donate := string(utils.Sub(in[DONATE_COUNT], "1"))
 	donateID := 0 // TODO cpp的方案是填充0到20位
-	userDonateKey := string(utils.ConcatWithString(USER_DONATE, args.Donor, "%", donateID))
-	allDonateKey := string(utils.ConcatWithString(ALL_DONATE, donateID))
-	donateDetail := utils.ConcatWithString("donor=", args.Donor, ",amount=", args.Amount,
+	userDonateKey := string(utils.Concat(USER_DONATE, args.Donor, "%", donateID))
+	allDonateKey := string(utils.Concat(ALL_DONATE, donateID))
+	donateDetail := utils.Concat("donor=", args.Donor, ",amount=", args.Amount,
 		",timestamp=", args.Timestamp, ",comments=", args.Comments)
 	batch := map[string][]byte{
 		userDonateKey:  donateDetail,
@@ -95,7 +95,7 @@ func (cd *charityDonation) Donate(ctx code.Context) code.Response {
 	if err := cd.batchPut(ctx, batch); err != nil {
 		return code.Error(err)
 	}
-	return code.OK(utils.ConcatWithString(donateID))
+	return code.OK(utils.Concat(donateID))
 
 }
 
@@ -127,9 +127,9 @@ func (cd *charityDonation) Cost(ctx code.Context) code.Response {
 	balance := utils.Sub(in[BALANCE], args.Amount)
 	costCount := utils.Add(in[COST_COUNT], 1) //TODO @fengjin
 	costId := []byte{}                        //TODO @fengjin
-	allCOstKey := utils.ConcatWithString(ALL_COST, costId)
+	allCOstKey := utils.Concat(ALL_COST, costId)
 	//_=map[[9]byte]string{} TODO @fengjin 这种格式的支持
-	costDetails := utils.ConcatWithString(
+	costDetails := utils.Concat(
 		"to=", args.To,
 		",ampunt=", args.Amount,
 		",timeStamp:=", args.Timestamp,
@@ -158,7 +158,7 @@ func (cd *charityDonation) Statistics(ctx code.Context) code.Response {
 		return code.Error(err)
 	}
 
-	return code.OK(utils.ConcatWithString( //TODO 其他的也修改成这种格式
+	return code.OK(utils.Concat( //TODO 其他的也修改成这种格式
 		"totalDonates=", in[TOTAL_RECEIVED], ",",
 		"totalCosts=", in[TOTAL_COSTS], ",",
 		"fundBalance=", in[BALANCE], ",",
@@ -172,8 +172,8 @@ func (cd *charityDonation) QueryDoner(ctx code.Context) code.Response {
 	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	start := utils.ConcatWithString(USER_DONATE, args.Donar, "%")
-	end := utils.ConcatWithString(start, "~")
+	start := utils.Concat(USER_DONATE, args.Donar, "%")
+	end := utils.Concat(start, "~")
 	iter := ctx.NewIterator(start, end)
 	donateCount := []byte("0") //TODO
 	defer iter.Close()
@@ -182,13 +182,13 @@ func (cd *charityDonation) QueryDoner(ctx code.Context) code.Response {
 		if len(iter.Key()) > len(start) { //为什么这里需要检查长度呢？
 			donateCount = utils.Add(donateCount, "1")
 			donateId := iter.Key()[len(start)] //TODO @fengjin
-			result = append(result, utils.ConcatWithString(
+			result = append(result, utils.Concat(
 				"id=", donateId, ",",
 				iter.Value(), "\n",
 			)...)
 		}
 	}
-	return code.OK(utils.ConcatWithString("total donate count:", donateCount, "\n", result))
+	return code.OK(utils.Concat("total donate count:", donateCount, "\n", result))
 }
 
 func (cd *charityDonation) QueryDonates(ctx code.Context) code.Response {
@@ -202,9 +202,9 @@ func (cd *charityDonation) QueryDonates(ctx code.Context) code.Response {
 	if utils.Compare(args.Limit, MAX_LIMIT) > 0 { //TODO @fengjin
 		return code.Error(ErrLimitExceeded)
 	}
-	donateKey := utils.ConcatWithString(ALL_DONATE, args.StartId)
+	donateKey := utils.Concat(ALL_DONATE, args.StartId)
 	start := donateKey
-	end := utils.ConcatWithString(donateKey, "~")
+	end := utils.Concat(donateKey, "~")
 	iter := ctx.NewIterator(start, end)
 	defer iter.Close()
 	selected := 0
@@ -218,7 +218,7 @@ func (cd *charityDonation) QueryDonates(ctx code.Context) code.Response {
 		}
 		selected += 1
 		donateID := iter.Key()[:len([]byte(ALL_DONATE))]
-		result = append(result, utils.ConcatWithString(
+		result = append(result, utils.Concat(
 			"id=", donateID, ",",
 			iter.Value(), "\n",
 		)...)
@@ -239,9 +239,9 @@ func (cd *charityDonation) QueryCosts(ctx code.Context) code.Response {
 	if utils.Compare(args.Limit, MAX_LIMIT) > 0 { //TODO @fengjin
 		return code.Error(ErrLimitExceeded)
 	}
-	costKey := utils.ConcatWithString(ALL_COST, args.StartId)
+	costKey := utils.Concat(ALL_COST, args.StartId)
 	start := costKey
-	end := utils.ConcatWithString(costKey, "~")
+	end := utils.Concat(costKey, "~")
 	iter := ctx.NewIterator(start, end) //要不也封装一层吧
 	defer iter.Close()
 	selected := 0
@@ -255,7 +255,7 @@ func (cd *charityDonation) QueryCosts(ctx code.Context) code.Response {
 		}
 		selected += 1
 		costId := iter.Key()[:len([]byte(ALL_COST))]
-		result = append(result, utils.ConcatWithString(
+		result = append(result, utils.Concat(
 			"id=", costId, ",",
 			iter.Value(), "\n",
 		)...)
@@ -266,7 +266,7 @@ func (cd *charityDonation) QueryCosts(ctx code.Context) code.Response {
 
 func (cd *charityDonation) batchPut(ctx code.Context, batch map[string][]byte) error {
 	for k, v := range batch {
-		if err := ctx.PutObject(utils.ConcatWithString(k), v); err != nil {
+		if err := ctx.PutObject(utils.Concat(k), v); err != nil {
 			return err
 		}
 	}
@@ -276,7 +276,7 @@ func (cd *charityDonation) batchPut(ctx code.Context, batch map[string][]byte) e
 //TODO 验证下这么写是不是可以，尤其是一边读一边修改
 func (cd *charityDonation) batchGet(ctx code.Context, out *map[string][]byte) error {
 	for k, _ := range *out {
-		tmp, err := ctx.GetObject(utils.ConcatWithString(k))
+		tmp, err := ctx.GetObject(utils.Concat(k))
 		if err != nil {
 			return err
 		}

@@ -38,7 +38,7 @@ func (am *awardManage) Initialize(ctx code.Context) code.Response {
 		return code.Error(err)
 	}
 
-	if err := ctx.PutObject(utils2.ConcatWithString(MASTERPRE), utils2.ConcatWithString(caller)); err != nil {
+	if err := ctx.PutObject(utils2.Concat(MASTERPRE), utils2.Concat(caller)); err != nil {
 		return code.Error(err)
 	}
 
@@ -201,12 +201,12 @@ func (am *awardManage) Approve(ctx code.Context) code.Response {
 	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	value, err := ctx.GetObject(utils2.ConcatWithString(ALLOWANCEPRE, args.From, "_", args.To))
+	value, err := ctx.GetObject(utils2.Concat(ALLOWANCEPRE, args.From, "_", args.To))
 	if err != nil {
 
 	}
 
-	from_balance, err := ctx.GetObject(utils2.ConcatWithString(BALANCEPRE, args.From))
+	from_balance, err := ctx.GetObject(utils2.Concat(BALANCEPRE, args.From))
 	if err != nil {
 		return code.Error(err)
 	}
@@ -217,7 +217,7 @@ func (am *awardManage) Approve(ctx code.Context) code.Response {
 	if utils2.Compare(from_balance, args.Token) < 0 {
 		return code.Error(utils.ErrBalanceLow)
 	}
-	to_balance, err := ctx.GetObject(utils2.ConcatWithString(BALANCEPRE, args.To))
+	to_balance, err := ctx.GetObject(utils2.Concat(BALANCEPRE, args.To))
 	if err != nil {
 		return code.Error(err)
 	}

@@ -35,7 +35,7 @@ func (sc *shortContent) StoreShortContent(ctx code.Context) code.Response {
 	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	userKey := utils.ConcatWithString(USER_BUCKET, "/", args.UserId, "/", args.Topic, "/", args.Title)
+	userKey := utils.Concat(USER_BUCKET, "/", args.UserId, "/", args.Topic, "/", args.Title)
 	if len(args.Topic) > TOPIC_LENGTH_LIMIT || len(args.Title) > TITLE_LENGTH_LIMIT ||
 		len(args.Content) > CONTENT_LENGTH_LIMIT {
 		//	TODO 注意下这里 len 的含义
@@ -54,14 +54,14 @@ func (sc *shortContent) QueryByUser(ctx code.Context) code.Response {
 	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	start := utils.ConcatWithString(USER_BUCKET, "/", args.UserID, "/")
-	end := utils.ConcatWithString(start, "~")
+	start := utils.Concat(USER_BUCKET, "/", args.UserID, "/")
+	end := utils.Concat(start, "~")
 	result := []byte{}
 	iter := ctx.NewIterator(start, end)
 	defer iter.Close()
 	//iter 需要关闭
 	for iter.Next() {
-		result = append(result, utils.ConcatWithString(iter.Key(), "\n", iter.Value(), "\n")...)
+		result = append(result, utils.Concat(iter.Key(), "\n", iter.Value(), "\n")...)
 	}
 	return code.OK(result)
 }
@@ -74,7 +74,7 @@ func (sc *shortContent) QueryByTitle(ctx code.Context) code.Response {
 	if err := utils.Validate(ctx.Args(), &args); err != nil {
 		return code.Error(err)
 	}
-	value, err := ctx.GetObject(utils.ConcatWithString(USER_BUCKET, "/", args.UserId, "/", args.Topic, "/", args.Title))
+	value, err := ctx.GetObject(utils.Concat(USER_BUCKET, "/", args.UserId, "/", args.Topic, "/", args.Title))
 	if err != nil {
 		return code.Error(err)
 	}
@@ -86,14 +86,14 @@ func (sc *shortContent) QueryByTopic(ctx code.Context) code.Response {
 		UserId []byte `json:"user_id",required:"true"`
 		Topic  []byte `json:"user_id",required:"true"`
 	}{}
-	start := utils.ConcatWithString(USER_BUCKET, "/", args.UserId, "/", args.Topic, "/")
-	end := utils.ConcatWithString(start, "~")
+	start := utils.Concat(USER_BUCKET, "/", args.UserId, "/", args.Topic, "/")
+	end := utils.Concat(start, "~")
 	iter := ctx.NewIterator(start, end)
 	defer iter.Close()
 	result := []byte{}
 
 	for iter.Next() {
-		result = append(result, utils.ConcatWithString(iter.Key(), "\n", iter.Value(), "\n")...)
+		result = append(result, utils.Concat(iter.Key(), "\n", iter.Value(), "\n")...)
 	}
 	return code.OK(result)
 }

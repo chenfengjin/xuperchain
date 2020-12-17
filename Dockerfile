@@ -5,7 +5,6 @@ RUN apt update && apt install -y  openjdk-11-jre gdbserver cmake make vim
 WORKDIR /go/src/github.com/xuperchain/xuperchain
 COPY . .
 RUN make clean
-#RUN bash core/scripts/build.sh
 ENV GOPROXY=https://goproxy.cn
 RUN go get github.com/go-delve/delve/cmd/dlv
 
@@ -36,6 +35,4 @@ EXPOSE 40000 40000
 WORKDIR /go/src/github.com/xuperchain/xuperchain/core
 RUN ./xchain-cli createChain
 CMD ["dlv", "--listen=:40000", "--headless=true", "--api-version=2", "--accept-multiclient", "exec", "./xchain"]
-
-
 

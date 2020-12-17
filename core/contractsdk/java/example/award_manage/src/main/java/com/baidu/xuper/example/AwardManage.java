@@ -9,7 +9,7 @@ import com.baidu.xuper.Contract;
 import com.baidu.xuper.ContractMethod;
 import com.baidu.xuper.Driver;
 import com.baidu.xuper.Response;
-
+import com.baidu.xuper.utils.ByteUtils;
 /**
  * Counter
  */
@@ -28,7 +28,7 @@ public class AwardManage implements Contract {
         if (totalSupply.length ==0){
             return Response.error("missing totalSupply");
         }
-        if (Less(totalSupply,0) || Equal(totalSupply,0)){
+        if (ByteUtils.Less(totalSupply,0) || ByteUtils.Equal(totalSupply,0)){
             return Response.error("totalSupply is overflow");
         }
         ctx.putObject(ByteUtils.Concat(BALANCE,caller),totalSupply);
@@ -80,6 +80,8 @@ public class AwardManage implements Contract {
         return ctx.getObject(ByteUtils.Concat(ALLOWANCE.getBytes(),from,"_".getBytes(),to))
 
     }
+
+    @ContractMethod
     public Response transfer(Context ctx){
 
         byte[] from = ctx.args().get("from".getBytes());
@@ -109,6 +111,7 @@ public class AwardManage implements Contract {
         ctx.putObject(to_key,ByteUtils.add(to_balance,token));
         return Response.ok("transfer success".getBytes());
     }
+    @ContractMethod
     public Response transferFrom(Context ctx){
 
         byte[] from = ctx.args().get("from".getBytes());
@@ -149,7 +152,7 @@ public class AwardManage implements Contract {
         ctx.putObject(to_key,ByteUtils.add(to_balance,token));
         ctx.putObject(allowance_key,ByteUtils.sub(allowance_value,token));
     }
-
+    @ContractMethod
     public Response approve(Context ctx){
         byte[] from = ctx.args().get("from".getBytes());
         byte[] to = ctx.args().get("to".getBytes());
