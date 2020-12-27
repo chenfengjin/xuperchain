@@ -16,7 +16,9 @@ const (
 	TICKETS = "tickets"
 )
 
+
 type luckDraw struct {
+
 }
 
 func (ld *luckDraw) Initialize(ctx code.Context) code.Response {
