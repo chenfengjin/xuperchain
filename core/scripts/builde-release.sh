@@ -31,9 +31,9 @@ echo start build plugins
 echo "OS:"${PLATFORM}
 echo "## Build Plugins..."
 mkdir -p  ${output_dir}/plugins/kv  ${output_dir}/plugins/crypto  ${output_dir}/plugins/consensus  ${output_dir}/plugins/contract
-go build --buildmode=plugin --tags multi -o core/plugins/kv/kv-ldb-multi.so.1.0.0 github.com/xuperchain/xuperchain/core/kv/kvdb/plugin-ldb
-go build --buildmode=plugin --tags single -o core/plugins/kv/kv-ldb-single.so.1.0.0 github.com/xuperchain/xuperchain/core/kv/kvdb/plugin-ldb
-go build --buildmode=plugin --tags cloud -o core/plugins/kv/kv-ldb-cloud.so.1.0.0 github.com/xuperchain/xuperchain/core/kv/kvdb/plugin-ldb
+go build --buildmode=plugin --tags multi -o ${output_dir}/plugins/kv/kv-ldb-multi.so.1.0.0 github.com/xuperchain/xuperchain/core/kv/kvdb/plugin-ldb
+go build --buildmode=plugin --tags single -o ${output_dir}/plugins/kv/kv-ldb-single.so.1.0.0 github.com/xuperchain/xuperchain/core/kv/kvdb/plugin-ldb
+go build --buildmode=plugin --tags cloud -o ${output_dir}/plugins/kv/kv-ldb-cloud.so.1.0.0 github.com/xuperchain/xuperchain/core/kv/kvdb/plugin-ldb
 go build --buildmode=plugin -o ${output_dir}/plugins/kv/kv-badger.so.1.0.0 github.com/xuperchain/xuperchain/core/kv/kvdb/plugin-badger
 go build --buildmode=plugin -o ${output_dir}/plugins/crypto/crypto-default.so.1.0.0 github.com/xuperchain/xuperchain/core/crypto/client/xchain/plugin_impl
 go build --buildmode=plugin -o ${output_dir}/plugins/crypto/crypto-schnorr.so.1.0.0 github.com/xuperchain/xuperchain/core/crypto/client/schnorr/plugin_impl
@@ -50,8 +50,10 @@ go build --buildmode=plugin -o ${output_dir}/plugins/xendorser/xendorser-proxy.s
 # TODO @fengjin  
 # Add symbol link of binary file for compatibility
 cp -rf core/data ${output_dir}
+
 cp -rf core/conf ${output_dir}
 cp -rf core/cmd/relayer/conf/relayer.yaml ${output_dir}/conf
 cp -rf core/cmd/cli/conf/* ${output_dir}/conf
 cp -rf core/cmd/quick_shell/* ${output_dir}
 mkdir -p ${output_dir}/data/blockchain
+

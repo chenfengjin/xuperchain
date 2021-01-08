@@ -1,22 +1,31 @@
 all: build
 
 .PHONY: all test clean
-
 export GO111MODULE=on
-export GOFLAGS=-mod=vendor
-XCHAIN_ROOT := ${PWD}/core
-export XCHAIN_ROOT
-PATH := ${PWD}/core/xvm/compile/wabt/build:$(PATH)
+
+export XCHAIN_ROOT := ${PWD}/output
+PATH := $(PATH):(XCHAIN_ROOT)/bin
 #  生成所有需要的文件并且
-build:contractsdk
-	./core/scripts/build.sh
-	make -C core/xvm/compile/wabt -j 8 &&cp core/xvm/compile/wabt/build/wasm2c ./
-
-install: build
-	echo set env to xchain 
+build-debug:wabt
+	bash core/scripts/build-debug.sh
+	mv core/xvm/compile/wabt/build/wasm2c $(XCHAIN_ROOT)/bin
 
 
+build-release:wabt
+	bash core/scripts/build.sh
+	mv core/xvm/compile/wabt/build/wasm2c $(XCHAIN_ROOT)/bin
 
+
+wabt:
+	make -C core/xvm/compile/wabt -j 8
+
+build:build-release contractsdk
+
+install:
+	echo set env to xchain
+	cd $(XCHAIN_ROOT) &&  xchain-cli createChain
+	cd $(XCHAIN_ROOT)&& ./xchain &  && xchain-cli account new --account 1111111111111111 --fee 2000000000000 && xchain-cli transfer --to XC1111111111111111@xuper --amount 100000000000000
+	echo TBD
 test:contractsdk-test
 	go test -coverprofile=coverage.txt -covermode=atomic ./...
 	make -C 
@@ -24,10 +33,11 @@ test:contractsdk-test
 
 clean:
 	rm -rf core/xvm/compile/wabt/build
-	find . -name '*.so.*' -exec rm {} \;
+	rm -rf output
 
 contractsdk:
-	make -C core/contractsdk build
+	#make -C core/contractsdk build
+	echo TBD
 
 contractsdk-test:contractsdk
 	make -C core/contractsdk test
@@ -40,4 +50,4 @@ docker-build:
 docker-test:
 #  build docker image 
 build-image:
-	# 
+	#
