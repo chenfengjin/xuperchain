@@ -43,6 +43,13 @@ jobs:
         mvn install -f ./core/contractsdk/java/pom.xml
         mvn package -f ./core/contractsdk/java/example/counter/pom.xml
 
+  release:
+    strategy:
+      matrix:
+        platform: [ubuntu-latest]
+    runs-on: ${{ matrix.platform }}
+
+    steps:
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
