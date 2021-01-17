@@ -1,0 +1,145 @@
+package main
+
+import (
+	"bytes"
+	"fmt"
+	"github.com/xuperchain/xuperchain/core/contractsdk/go/code"
+	"github.com/xuperchain/xuperchain/core/contractsdk/go/driver"
+	"github.com/xuperchain/xuperchain/core/contractsdk/go/utils"
+	"strings"
+)
+
+const (
+	GOODS          = "GOODS_"
+	GOODSRECORD    = "GOODSSRECORD_"
+	GOODSRECORDTOP = "GOODSSRECORDTOP_"
+	CREATE         = "CREATE"
+	ADMIN          = "admin"
+)
+
+type sourceTrace struct {
+}
+
+func (st *sourceTrace) Initialize(ctx code.Context) code.Response {
+	args := struct {
+		Admin []byte `json:"admin",required:"true"`
+	}{}
+	if err := utils.Validate(ctx.Args(), &args); err != nil {
+		return code.Error(err)
+	}
+	ctx.PutObject(utils.Concat(ADMIN), args.Admin)
+	return code.OK(nil)
+}
+
+func (st *sourceTrace) CreateGoods(ctx code.Context) code.Response {
+	caller := ctx.Initiator()
+	if caller == "" {
+		return code.Error(utils.ErrMissingCaller)
+	}
+
+	admin, err := ctx.GetObject(utils.Concat(ADMIN))
+	if err != nil {
+		return code.Error(err)
+	}
+
+	if utils.Compare(admin, []byte(caller)) == 0 {
+		return code.Error(utils.ErrPermissionDenied)
+	}
+	args := struct {
+		Id   []byte `json:"id",required:"true''"`
+		Desc []byte `json:"desc",required:"desc"`
+	}{}
+	if err := utils.Validate(ctx.Args(), &args); err != nil {
+		return code.Error(err)
+	}
+	goodsKey := utils.Concat(GOODS, args.Id)
+	if err := utils.CheckExist(ctx, goodsKey); err != nil {
+		return code.Error(err)
+	}
+	if err := ctx.PutObject(goodsKey, args.Desc); err != nil {
+		return code.Error(err)
+	}
+
+	goodsRecordsKey := utils.Concat(GOODSRECORD, args.Id, "_0")
+	goodsRecordsTopKey := utils.Concat(GOODSRECORDTOP, args.Id)
+	if err := ctx.PutObject(goodsRecordsKey, utils.Concat(CREATE)); err != nil {
+		return code.Error(err)
+	}
+	value := []byte("0") //TODO @fengjin
+	if err := ctx.PutObject(goodsRecordsTopKey, value); err != nil {
+		return code.Error(err)
+	}
+	return code.OK(nil)
+}
+
+func (st *sourceTrace) updateGoods(ctx code.Context) code.Response {
+	caller := ctx.Initiator()
+	if caller == "" {
+		return code.Error(utils.ErrMissingCaller)
+	}
+
+	admin, err := ctx.GetObject(utils.Concat(ADMIN))
+	if err != nil {
+		return code.Error(err)
+	}
+
+	if utils.Compare(admin, []byte(caller)) == 0 {
+		return code.Error(utils.ErrPermissionDenied)
+	}
+	args := struct {
+		Id     []byte `json:"id",required:"true"`
+		Reason []byte `json:"reason",required:"true"`
+	}{}
+
+	if err := utils.Validate(ctx.Args(), &args); err != nil {
+		return code.Error(err)
+	}
+	value, err := ctx.GetObject(utils.Concat(GOODSRECORDTOP, args.Id))
+	if err != nil {
+		return code.Error(err)
+	}
+	topRecord := utils.Add(value, []byte("1"))
+
+	if err := ctx.PutObject(utils.Concat(GOODSRECORD, args.Id, "_", topRecord), args.Reason); err != nil {
+		return code.Error(err)
+	}
+	if err := ctx.PutObject(utils.Concat(GOODSRECORDTOP, args.Id), topRecord); err != nil {
+		return code.Error(err)
+	}
+	return code.OK(topRecord)
+}
+
+func (st *sourceTrace) QueryRecords(ctx code.Context) code.Response {
+	args := struct {
+		Id []byte `json:"id",required:"true"`
+	}{}
+	if err := utils.Validate(ctx.Args(), &args); err != nil {
+		return code.Error(err)
+	}
+	//TODO @fengjin 不存在的时候error 是什么情况呢?
+	value, err := ctx.GetObject(utils.Concat(GOODS, args.Id))
+	_ = value // TODO @fengjin
+	if err != nil {
+		return code.Error(err)
+	}
+	goodsRecordsKey := utils.Concat(GOODSRECORD, args.Id, "_")
+	start := goodsRecordsKey
+	end := utils.Concat(start, "~")
+	iter := ctx.NewIterator(start, end)
+	result := bytes.NewBuffer(nil)
+	for iter.Next() {
+		//TODO error 处理
+		goodsRecord := string(iter.Key())[:len(GOODSRECORD)] //TODO @fengjin 确认下标没问题
+		pos := strings.Index(goodsRecord, "_")
+		goodsId := goodsRecord[:pos]
+		updateRecord := goodsRecord[pos+1:]
+		reason := iter.Value()
+		//result = append(result,utils1.Concat("goodsId=",goodsId,))
+		result.WriteString(fmt.Sprintf("goodsID=%s,updateRecord=%s,reason=%s,\n", goodsId, updateRecord, reason))
+	}
+	return code.OK(result.Bytes())
+}
+
+func main() {
+	driver.Serve(new(sourceTrace))
+}

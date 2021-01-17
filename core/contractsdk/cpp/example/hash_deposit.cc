@@ -38,7 +38,6 @@ public:
         if (ctx->get_object(hashKey, &tempVal)) {
             ctx->error("storeFileInfo failed, such hash has existed already");
             return;
-        }
         if (ctx->put_object(userKey, value) && ctx->put_object(hashKey, value)) {
             ctx->ok("storeFileInfo success");
             return;
