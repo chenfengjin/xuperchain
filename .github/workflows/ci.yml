@@ -25,6 +25,7 @@ jobs:
       with:
         file: ./coverage.txt
 
+
   contract-java-sdk:
     strategy:
       matrix:
@@ -41,3 +42,25 @@ jobs:
       run: |
         mvn install -f ./core/contractsdk/java/pom.xml
         mvn package -f ./core/contractsdk/java/example/counter/pom.xml
+
+  upload-artifact:
+    strategy:
+      matrix:
+        go-version: [1.13.x]
+        platform: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+    - name: Install Go
+      uses: actions/setup-go@v1
+      with:
+        go-version: ${{ matrix.go-version }}
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Build
+      run: |
+        make build 
+    - uses: actions/upload-artifact@v2
+    with:
+      name: xuperchain-${{matrix.platform}}
+      path: output/
+    
