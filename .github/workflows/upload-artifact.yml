@@ -18,7 +18,7 @@ jobs:
       uses: actions/checkout@v2
     - name : zip package
       run: |
-        make && tar -zcvf  xchain-${{ matrix.platform }}.tar.gz output 
+        # make && tar -zcvf  xchain-${{ matrix.platform }}.tar.gz output 
         echo ${{ github.event.inputs }}
     # - name: Create Release
     #   id: create_release
