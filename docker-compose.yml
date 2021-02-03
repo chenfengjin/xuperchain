@@ -1,22 +1,24 @@
 version: "2"
+
+networks:
+  extnetwork:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.19.0.0/16
+          gateway: 172.19.0.1
+
 services:
   xchain:
-    image: xuper/xuperchain:latest
+    image: xuperchain:dev
+    networks:
+      extnetwork:
+        ipv4_address: 172.19.0.2
   prometheus:
     image: prom/prometheus:latest
-  # node1:
-  #   image: xuper/xuperchain:latest
-  #   links:
-  #     - boot_node
-  #   command: "bash start-node.sh"
-  #   depends_on:
-  #     - boot_node
-
-  # node2:
-  #   image: xuper/xuperchain:latest
-  #   links:
-  #     - boot_node
-  #   command: "bash start-node.sh"
-  #   depends_on:
-  #     - boot_node
+  grafana:
+    image: grafana/grafana
+    ports:
+    - "9000:3000"
 
