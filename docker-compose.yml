@@ -1,0 +1,22 @@
+version: "2"
+services:
+  xchain:
+    image: xuper/xuperchain:latest
+  prometheus:
+    image: prom/prometheus:latest
+  # node1:
+  #   image: xuper/xuperchain:latest
+  #   links:
+  #     - boot_node
+  #   command: "bash start-node.sh"
+  #   depends_on:
+  #     - boot_node
+
+  # node2:
+  #   image: xuper/xuperchain:latest
+  #   links:
+  #     - boot_node
+  #   command: "bash start-node.sh"
+  #   depends_on:
+  #     - boot_node
+
