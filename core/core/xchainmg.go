@@ -1,13 +1,16 @@
 package xchaincore
 
 import (
-	"errors"
+	"fmt"
 	"io/ioutil"
 	"sync"
 
+	"github.com/tendermint/tendermint/libs/os"
 	log "github.com/xuperchain/log15"
 	"github.com/xuperchain/xuperchain/core/common/config"
 	"github.com/xuperchain/xuperchain/core/common/events"
+	"github.com/xuperchain/xuperchain/core/common/log"
+	log2 "github.com/xuperchain/xuperchain/core/common/log"
 	"github.com/xuperchain/xuperchain/core/common/probe"
 	"github.com/xuperchain/xuperchain/core/contract/kernel"
 	p2p_base "github.com/xuperchain/xuperchain/core/p2p/base"
@@ -64,6 +67,37 @@ func (xm *XChainMG) Init(log log.Logger, cfg *config.NodeConfig,
 		return err
 	}
 
+	if os.FileExists(xm.datapath) {
+		lcfg := config.LogConfig{
+			Module:         "xchain",
+			Filepath:       "logs",
+			Filename:       "xchain",
+			Fmt:            "logfmt",
+			Console:        true,
+			Level:          "debug",
+			Async:          false,
+			RotateInterval: 60,  // rotate every 60 minutes
+			RotateBackups:  168, // keep old log files for 7 days
+		}
+		xlog, err := log2.OpenLog(&lcfg)
+		if err != nil {
+			return err
+		}
+		k := kernel.Kernel{}
+		kc := &config.KernelConfig{}
+		k.Init("data/blockchain/xuper", xlog, nil, "xuper", kc)
+		js := "data/config" + "/" + "xuper" + ".json"
+		data, err := ioutil.ReadFile(js)
+		if err != nil {
+			fmt.Println("read file " + js + " error")
+			return err
+		}
+		err = k.CreateBlockChain("xuper", data)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
 	dir, err := ioutil.ReadDir(xm.datapath)
 	if err != nil {
 		xm.Log.Error("can't open data", "datapath", xm.datapath)
@@ -84,11 +118,6 @@ func (xm *XChainMG) Init(log log.Logger, cfg *config.NodeConfig,
 			}
 			xm.chains.Store(fi.Name(), x)
 		}
-	}
-	if xm.rootKernel == nil {
-		err := errors.New("xuper chain not found")
-		xm.Log.Error("can not find xuper chain, please create it first", "err", err)
-		return err
 	}
 	/*for _, x := range xm.chains {
 		go x.SyncBlocks()
