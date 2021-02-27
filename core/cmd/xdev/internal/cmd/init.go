@@ -20,7 +20,7 @@ struct Hello : public xchain::Contract {};
 
 DEFINE_METHOD(Hello, initialize) {
     xchain::Context* ctx = self.context();
-    ctx->ok("initialize succeed");
+    ctx->ok("initializsucceede ");
 }
 
 DEFINE_METHOD(Hello, hello) {

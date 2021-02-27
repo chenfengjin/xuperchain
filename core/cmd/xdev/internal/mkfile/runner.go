@@ -6,7 +6,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"sort"
-	"strconv"
 	"strings"
 )
 
@@ -106,16 +105,21 @@ func (r *Runner) makeUsingDocker(mkfile string) error {
 	mountpaths := r.mountPaths()
 	runargs := []string{
 		"run",
-		"-u", strconv.Itoa(os.Getuid()) + ":" + strconv.Itoa(os.Getgid()),
+		//"-u", strconv.Itoa(os.Getuid()) + ":" + strconv.Itoa(os.Getgid()),
 		"--rm",
 		"-w", r.entry.Path,
 	}
+
 	runargs = append(runargs, mountpaths...)
 	runargs = append(runargs, r.image)
-	runargs = append(runargs, "emmake", "make", "build", "-f", mkfile)
-	runargs = append(runargs, r.makeFlags...)
+	//runargs = append(runargs, "emmake", "make", "build", "-f", mkfile)
+	//runargs = append(runargs, "mvn", "package")
+	//runargs = append(runargs, r.makeFlags...)
+	//runargs = append(runargs, "go", "build")
+	runargs = append(runargs, "-o", ".", "--abi", "--bin")
 
 	r.Printf("docker %s", strings.Join(runargs, " "))
+
 	cmd := exec.Command("docker", runargs...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
