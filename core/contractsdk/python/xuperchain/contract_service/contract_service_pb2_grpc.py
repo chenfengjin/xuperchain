@@ -2,8 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import contract_pb2 as contract__pb2
-from xuperchain.contract import NativeCallRequest
+import xuperchain.contract as contract__pb2
 from xuperchain.context import Context
 
 
@@ -36,7 +35,7 @@ class NativeCodeServicer(object):
     def __init__(self):
         self.contract = None
 
-    def Call(self, request, context):
+    def Call(self, request):
         """Missing associated documentation comment in .proto file."""
         ctxid = request["ctxid"]
         ctx = Context(ctxid=ctxid)
@@ -46,16 +45,15 @@ class NativeCodeServicer(object):
         f = getattr(self.contract, method)
         #     check
         try:
-            resp = f(context)
+            resp = f(ctx)
         except Exception as e:
             pass
-        context.set_output(resp)
+        ctx.set_output(resp)
+        # Return JSON
+        return contract__pb2.NativeCallResponse
 
     def Ping(self, request):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        return contract__pb2.NativeCallResponse()
 
     def SetContract(self, contract):
         self.contract = contract
@@ -206,445 +204,445 @@ class SyscallStub(object):
         )
 
 
-class SyscallServicer(object):
-    """xchain syscall service
-    """
-
-    def PutObject(self, request, context):
-        """KV service
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def GetObject(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def DeleteObject(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def NewIterator(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def QueryTx(self, request, context):
-        """Chain service
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def QueryBlock(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def Transfer(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def ContractCall(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def CrossContractQuery(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def GetAccountAddresses(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def Ping(self, request, context):
-        """Heartbeat
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def PostLog(self, request, context):
-        """Post log
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def GetCallArgs(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def SetOutput(self, request, context):
-        """Missing associated documentation comment in .proto file."""
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-    def EmitEvent(self, request, context):
-        """Send Event
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
-
-def add_SyscallServicer_to_server(servicer, server):
-    rpc_method_handlers = {
-        'PutObject': grpc.unary_unary_rpc_method_handler(
-            servicer.PutObject,
-            request_deserializer=contract__pb2.PutRequest.FromString,
-            response_serializer=contract__pb2.PutResponse.SerializeToString,
-        ),
-        'GetObject': grpc.unary_unary_rpc_method_handler(
-            servicer.GetObject,
-            request_deserializer=contract__pb2.GetRequest.FromString,
-            response_serializer=contract__pb2.GetResponse.SerializeToString,
-        ),
-        'DeleteObject': grpc.unary_unary_rpc_method_handler(
-            servicer.DeleteObject,
-            request_deserializer=contract__pb2.DeleteRequest.FromString,
-            response_serializer=contract__pb2.DeleteResponse.SerializeToString,
-        ),
-        'NewIterator': grpc.unary_unary_rpc_method_handler(
-            servicer.NewIterator,
-            request_deserializer=contract__pb2.IteratorRequest.FromString,
-            response_serializer=contract__pb2.IteratorResponse.SerializeToString,
-        ),
-        'QueryTx': grpc.unary_unary_rpc_method_handler(
-            servicer.QueryTx,
-            request_deserializer=contract__pb2.QueryTxRequest.FromString,
-            response_serializer=contract__pb2.QueryTxResponse.SerializeToString,
-        ),
-        'QueryBlock': grpc.unary_unary_rpc_method_handler(
-            servicer.QueryBlock,
-            request_deserializer=contract__pb2.QueryBlockRequest.FromString,
-            response_serializer=contract__pb2.QueryBlockResponse.SerializeToString,
-        ),
-        'Transfer': grpc.unary_unary_rpc_method_handler(
-            servicer.Transfer,
-            request_deserializer=contract__pb2.TransferRequest.FromString,
-            response_serializer=contract__pb2.TransferResponse.SerializeToString,
-        ),
-        'ContractCall': grpc.unary_unary_rpc_method_handler(
-            servicer.ContractCall,
-            request_deserializer=contract__pb2.ContractCallRequest.FromString,
-            response_serializer=contract__pb2.ContractCallResponse.SerializeToString,
-        ),
-        'CrossContractQuery': grpc.unary_unary_rpc_method_handler(
-            servicer.CrossContractQuery,
-            request_deserializer=contract__pb2.CrossContractQueryRequest.FromString,
-            response_serializer=contract__pb2.CrossContractQueryResponse.SerializeToString,
-        ),
-        'GetAccountAddresses': grpc.unary_unary_rpc_method_handler(
-            servicer.GetAccountAddresses,
-            request_deserializer=contract__pb2.GetAccountAddressesRequest.FromString,
-            response_serializer=contract__pb2.GetAccountAddressesResponse.SerializeToString,
-        ),
-        'Ping': grpc.unary_unary_rpc_method_handler(
-            servicer.Ping,
-            request_deserializer=contract__pb2.PingRequest.FromString,
-            response_serializer=contract__pb2.PingResponse.SerializeToString,
-        ),
-        'PostLog': grpc.unary_unary_rpc_method_handler(
-            servicer.PostLog,
-            request_deserializer=contract__pb2.PostLogRequest.FromString,
-            response_serializer=contract__pb2.PostLogResponse.SerializeToString,
-        ),
-        'GetCallArgs': grpc.unary_unary_rpc_method_handler(
-            servicer.GetCallArgs,
-            request_deserializer=contract__pb2.GetCallArgsRequest.FromString,
-            response_serializer=contract__pb2.CallArgs.SerializeToString,
-        ),
-        'SetOutput': grpc.unary_unary_rpc_method_handler(
-            servicer.SetOutput,
-            request_deserializer=contract__pb2.SetOutputRequest.FromString,
-            response_serializer=contract__pb2.SetOutputResponse.SerializeToString,
-        ),
-        'EmitEvent': grpc.unary_unary_rpc_method_handler(
-            servicer.EmitEvent,
-            request_deserializer=contract__pb2.EmitEventRequest.FromString,
-            response_serializer=contract__pb2.EmitEventResponse.SerializeToString,
-        ),
-    }
-    generic_handler = grpc.method_handlers_generic_handler(
-        'xchain.contract.svc.Syscall', rpc_method_handlers)
-    server.add_generic_rpc_handlers((generic_handler,))
+# class SyscallServicer(object):
+#     """xchain syscall service
+#     """
+#
+#     def PutObject(self, request, context):
+#         """KV service
+#         """
+#         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+#         context.set_details('Method not implemented!')
+#         raise NotImplementedError('Method not implemented!')
+#
+#     def GetObject(self, request, context):
+#         """Missing associated documentation comment in .proto file."""
+#         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+#         context.set_details('Method not implemented!')
+#         raise NotImplementedError('Method not implemented!')
+#
+#     def DeleteObject(self, request, context):
+#         """Missing associated documentation comment in .proto file."""
+#         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+#         context.set_details('Method not implemented!')
+#         raise NotImplementedError('Method not implemented!')
+#
+#     def NewIterator(self, request, context):
+#         """Missing associated documentation comment in .proto file."""
+#         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+#         context.set_details('Method not implemented!')
+#         raise NotImplementedError('Method not implemented!')
+#
+#     def QueryTx(self, request, context):
+#         """Chain service
+#         """
+#         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+#         context.set_details('Method not implemented!')
+#         raise NotImplementedError('Method not implemented!')
+#
+#     def QueryBlock(self, request, context):
+#         """Missing associated documentation comment in .proto file."""
+#         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+#         context.set_details('Method not implemented!')
+#         raise NotImplementedError('Method not implemented!')
+#
+#     def Transfer(self, request, context):
+#         """Missing associated documentation comment in .proto file."""
+#         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+#         context.set_details('Method not implemented!')
+#         raise NotImplementedError('Method not implemented!')
+#
+#     def ContractCall(self, request, context):
+#         """Missing associated documentation comment in .proto file."""
+#         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+#         context.set_details('Method not implemented!')
+#         raise NotImplementedError('Method not implemented!')
+#
+#     def CrossContractQuery(self, request, context):
+#         """Missing associated documentation comment in .proto file."""
+#         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+#         context.set_details('Method not implemented!')
+#         raise NotImplementedError('Method not implemented!')
+#
+#     def GetAccountAddresses(self, request, context):
+#         """Missing associated documentation comment in .proto file."""
+#         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+#         context.set_details('Method not implemented!')
+#         raise NotImplementedError('Method not implemented!')
+#
+#     def Ping(self, request, context):
+#         """Heartbeat
+#         """
+#         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+#         context.set_details('Method not implemented!')
+#         raise NotImplementedError('Method not implemented!')
+#
+#     def PostLog(self, request, context):
+#         """Post log
+#         """
+#         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+#         context.set_details('Method not implemented!')
+#         raise NotImplementedError('Method not implemented!')
+#
+#     def GetCallArgs(self, request, context):
+#         """Missing associated documentation comment in .proto file."""
+#         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+#         context.set_details('Method not implemented!')
+#         raise NotImplementedError('Method not implemented!')
+#
+#     def SetOutput(self, request, context):
+#         """Missing associated documentation comment in .proto file."""
+#         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+#         context.set_details('Method not implemented!')
+#         raise NotImplementedError('Method not implemented!')
+#
+#     def EmitEvent(self, request, context):
+#         """Send Event
+#         """
+#         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+#         context.set_details('Method not implemented!')
+#         raise NotImplementedError('Method not implemented!')
+#
+#
+# def add_SyscallServicer_to_server(servicer, server):
+#     rpc_method_handlers = {
+#         'PutObject': grpc.unary_unary_rpc_method_handler(
+#             servicer.PutObject,
+#             request_deserializer=contract__pb2.PutRequest.FromString,
+#             response_serializer=contract__pb2.PutResponse.SerializeToString,
+#         ),
+#         'GetObject': grpc.unary_unary_rpc_method_handler(
+#             servicer.GetObject,
+#             request_deserializer=contract__pb2.GetRequest.FromString,
+#             response_serializer=contract__pb2.GetResponse.SerializeToString,
+#         ),
+#         'DeleteObject': grpc.unary_unary_rpc_method_handler(
+#             servicer.DeleteObject,
+#             request_deserializer=contract__pb2.DeleteRequest.FromString,
+#             response_serializer=contract__pb2.DeleteResponse.SerializeToString,
+#         ),
+#         'NewIterator': grpc.unary_unary_rpc_method_handler(
+#             servicer.NewIterator,
+#             request_deserializer=contract__pb2.IteratorRequest.FromString,
+#             response_serializer=contract__pb2.IteratorResponse.SerializeToString,
+#         ),
+#         'QueryTx': grpc.unary_unary_rpc_method_handler(
+#             servicer.QueryTx,
+#             request_deserializer=contract__pb2.QueryTxRequest.FromString,
+#             response_serializer=contract__pb2.QueryTxResponse.SerializeToString,
+#         ),
+#         'QueryBlock': grpc.unary_unary_rpc_method_handler(
+#             servicer.QueryBlock,
+#             request_deserializer=contract__pb2.QueryBlockRequest.FromString,
+#             response_serializer=contract__pb2.QueryBlockResponse.SerializeToString,
+#         ),
+#         'Transfer': grpc.unary_unary_rpc_method_handler(
+#             servicer.Transfer,
+#             request_deserializer=contract__pb2.TransferRequest.FromString,
+#             response_serializer=contract__pb2.TransferResponse.SerializeToString,
+#         ),
+#         'ContractCall': grpc.unary_unary_rpc_method_handler(
+#             servicer.ContractCall,
+#             request_deserializer=contract__pb2.ContractCallRequest.FromString,
+#             response_serializer=contract__pb2.ContractCallResponse.SerializeToString,
+#         ),
+#         'CrossContractQuery': grpc.unary_unary_rpc_method_handler(
+#             servicer.CrossContractQuery,
+#             request_deserializer=contract__pb2.CrossContractQueryRequest.FromString,
+#             response_serializer=contract__pb2.CrossContractQueryResponse.SerializeToString,
+#         ),
+#         'GetAccountAddresses': grpc.unary_unary_rpc_method_handler(
+#             servicer.GetAccountAddresses,
+#             request_deserializer=contract__pb2.GetAccountAddressesRequest.FromString,
+#             response_serializer=contract__pb2.GetAccountAddressesResponse.SerializeToString,
+#         ),
+#         'Ping': grpc.unary_unary_rpc_method_handler(
+#             servicer.Ping,
+#             request_deserializer=contract__pb2.PingRequest.FromString,
+#             response_serializer=contract__pb2.PingResponse.SerializeToString,
+#         ),
+#         'PostLog': grpc.unary_unary_rpc_method_handler(
+#             servicer.PostLog,
+#             request_deserializer=contract__pb2.PostLogRequest.FromString,
+#             response_serializer=contract__pb2.PostLogResponse.SerializeToString,
+#         ),
+#         'GetCallArgs': grpc.unary_unary_rpc_method_handler(
+#             servicer.GetCallArgs,
+#             request_deserializer=contract__pb2.GetCallArgsRequest.FromString,
+#             response_serializer=contract__pb2.CallArgs.SerializeToString,
+#         ),
+#         'SetOutput': grpc.unary_unary_rpc_method_handler(
+#             servicer.SetOutput,
+#             request_deserializer=contract__pb2.SetOutputRequest.FromString,
+#             response_serializer=contract__pb2.SetOutputResponse.SerializeToString,
+#         ),
+#         'EmitEvent': grpc.unary_unary_rpc_method_handler(
+#             servicer.EmitEvent,
+#             request_deserializer=contract__pb2.EmitEventRequest.FromString,
+#             response_serializer=contract__pb2.EmitEventResponse.SerializeToString,
+#         ),
+#     }
+#     generic_handler = grpc.method_handlers_generic_handler(
+#         'xchain.contract.svc.Syscall', rpc_method_handlers)
+#     server.add_generic_rpc_handlers((generic_handler,))
 
 
 # This class is part of an EXPERIMENTAL API.
-class Syscall(object):
-    """xchain syscall service
-    """
-
-    @staticmethod
-    def PutObject(request,
-                  target,
-                  options=(),
-                  channel_credentials=None,
-                  call_credentials=None,
-                  insecure=False,
-                  compression=None,
-                  wait_for_ready=None,
-                  timeout=None,
-                  metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/PutObject',
-                                             contract__pb2.PutRequest.SerializeToString,
-                                             contract__pb2.PutResponse.FromString,
-                                             options, channel_credentials,
-                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def GetObject(request,
-                  target,
-                  options=(),
-                  channel_credentials=None,
-                  call_credentials=None,
-                  insecure=False,
-                  compression=None,
-                  wait_for_ready=None,
-                  timeout=None,
-                  metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/GetObject',
-                                             contract__pb2.GetRequest.SerializeToString,
-                                             contract__pb2.GetResponse.FromString,
-                                             options, channel_credentials,
-                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def DeleteObject(request,
-                     target,
-                     options=(),
-                     channel_credentials=None,
-                     call_credentials=None,
-                     insecure=False,
-                     compression=None,
-                     wait_for_ready=None,
-                     timeout=None,
-                     metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/DeleteObject',
-                                             contract__pb2.DeleteRequest.SerializeToString,
-                                             contract__pb2.DeleteResponse.FromString,
-                                             options, channel_credentials,
-                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def NewIterator(request,
-                    target,
-                    options=(),
-                    channel_credentials=None,
-                    call_credentials=None,
-                    insecure=False,
-                    compression=None,
-                    wait_for_ready=None,
-                    timeout=None,
-                    metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/NewIterator',
-                                             contract__pb2.IteratorRequest.SerializeToString,
-                                             contract__pb2.IteratorResponse.FromString,
-                                             options, channel_credentials,
-                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def QueryTx(request,
-                target,
-                options=(),
-                channel_credentials=None,
-                call_credentials=None,
-                insecure=False,
-                compression=None,
-                wait_for_ready=None,
-                timeout=None,
-                metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/QueryTx',
-                                             contract__pb2.QueryTxRequest.SerializeToString,
-                                             contract__pb2.QueryTxResponse.FromString,
-                                             options, channel_credentials,
-                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def QueryBlock(request,
-                   target,
-                   options=(),
-                   channel_credentials=None,
-                   call_credentials=None,
-                   insecure=False,
-                   compression=None,
-                   wait_for_ready=None,
-                   timeout=None,
-                   metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/QueryBlock',
-                                             contract__pb2.QueryBlockRequest.SerializeToString,
-                                             contract__pb2.QueryBlockResponse.FromString,
-                                             options, channel_credentials,
-                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def Transfer(request,
-                 target,
-                 options=(),
-                 channel_credentials=None,
-                 call_credentials=None,
-                 insecure=False,
-                 compression=None,
-                 wait_for_ready=None,
-                 timeout=None,
-                 metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/Transfer',
-                                             contract__pb2.TransferRequest.SerializeToString,
-                                             contract__pb2.TransferResponse.FromString,
-                                             options, channel_credentials,
-                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def ContractCall(request,
-                     target,
-                     options=(),
-                     channel_credentials=None,
-                     call_credentials=None,
-                     insecure=False,
-                     compression=None,
-                     wait_for_ready=None,
-                     timeout=None,
-                     metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/ContractCall',
-                                             contract__pb2.ContractCallRequest.SerializeToString,
-                                             contract__pb2.ContractCallResponse.FromString,
-                                             options, channel_credentials,
-                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def CrossContractQuery(request,
-                           target,
-                           options=(),
-                           channel_credentials=None,
-                           call_credentials=None,
-                           insecure=False,
-                           compression=None,
-                           wait_for_ready=None,
-                           timeout=None,
-                           metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/CrossContractQuery',
-                                             contract__pb2.CrossContractQueryRequest.SerializeToString,
-                                             contract__pb2.CrossContractQueryResponse.FromString,
-                                             options, channel_credentials,
-                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def GetAccountAddresses(request,
-                            target,
-                            options=(),
-                            channel_credentials=None,
-                            call_credentials=None,
-                            insecure=False,
-                            compression=None,
-                            wait_for_ready=None,
-                            timeout=None,
-                            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/GetAccountAddresses',
-                                             contract__pb2.GetAccountAddressesRequest.SerializeToString,
-                                             contract__pb2.GetAccountAddressesResponse.FromString,
-                                             options, channel_credentials,
-                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def Ping(request,
-             target,
-             options=(),
-             channel_credentials=None,
-             call_credentials=None,
-             insecure=False,
-             compression=None,
-             wait_for_ready=None,
-             timeout=None,
-             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/Ping',
-                                             contract__pb2.PingRequest.SerializeToString,
-                                             contract__pb2.PingResponse.FromString,
-                                             options, channel_credentials,
-                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def PostLog(request,
-                target,
-                options=(),
-                channel_credentials=None,
-                call_credentials=None,
-                insecure=False,
-                compression=None,
-                wait_for_ready=None,
-                timeout=None,
-                metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/PostLog',
-                                             contract__pb2.PostLogRequest.SerializeToString,
-                                             contract__pb2.PostLogResponse.FromString,
-                                             options, channel_credentials,
-                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def GetCallArgs(request,
-                    target,
-                    options=(),
-                    channel_credentials=None,
-                    call_credentials=None,
-                    insecure=False,
-                    compression=None,
-                    wait_for_ready=None,
-                    timeout=None,
-                    metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/GetCallArgs',
-                                             contract__pb2.GetCallArgsRequest.SerializeToString,
-                                             contract__pb2.CallArgs.FromString,
-                                             options, channel_credentials,
-                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def SetOutput(request,
-                  target,
-                  options=(),
-                  channel_credentials=None,
-                  call_credentials=None,
-                  insecure=False,
-                  compression=None,
-                  wait_for_ready=None,
-                  timeout=None,
-                  metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/SetOutput',
-                                             contract__pb2.SetOutputRequest.SerializeToString,
-                                             contract__pb2.SetOutputResponse.FromString,
-                                             options, channel_credentials,
-                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
-
-    @staticmethod
-    def EmitEvent(request,
-                  target,
-                  options=(),
-                  channel_credentials=None,
-                  call_credentials=None,
-                  insecure=False,
-                  compression=None,
-                  wait_for_ready=None,
-                  timeout=None,
-                  metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/EmitEvent',
-                                             contract__pb2.EmitEventRequest.SerializeToString,
-                                             contract__pb2.EmitEventResponse.FromString,
-                                             options, channel_credentials,
-                                             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+# class Syscall(object):
+#     """xchain syscall service
+#     """
+#
+#     @staticmethod
+#     def PutObject(request,
+#                   target,
+#                   options=(),
+#                   channel_credentials=None,
+#                   call_credentials=None,
+#                   insecure=False,
+#                   compression=None,
+#                   wait_for_ready=None,
+#                   timeout=None,
+#                   metadata=None):
+#         return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/PutObject',
+#                                              contract__pb2.PutRequest.SerializeToString,
+#                                              contract__pb2.PutResponse.FromString,
+#                                              options, channel_credentials,
+#                                              insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+#
+#     @staticmethod
+#     def GetObject(request,
+#                   target,
+#                   options=(),
+#                   channel_credentials=None,
+#                   call_credentials=None,
+#                   insecure=False,
+#                   compression=None,
+#                   wait_for_ready=None,
+#                   timeout=None,
+#                   metadata=None):
+#         return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/GetObject',
+#                                              contract__pb2.GetRequest.SerializeToString,
+#                                              contract__pb2.GetResponse.FromString,
+#                                              options, channel_credentials,
+#                                              insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+#
+#     @staticmethod
+#     def DeleteObject(request,
+#                      target,
+#                      options=(),
+#                      channel_credentials=None,
+#                      call_credentials=None,
+#                      insecure=False,
+#                      compression=None,
+#                      wait_for_ready=None,
+#                      timeout=None,
+#                      metadata=None):
+#         return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/DeleteObject',
+#                                              contract__pb2.DeleteRequest.SerializeToString,
+#                                              contract__pb2.DeleteResponse.FromString,
+#                                              options, channel_credentials,
+#                                              insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+#
+#     @staticmethod
+#     def NewIterator(request,
+#                     target,
+#                     options=(),
+#                     channel_credentials=None,
+#                     call_credentials=None,
+#                     insecure=False,
+#                     compression=None,
+#                     wait_for_ready=None,
+#                     timeout=None,
+#                     metadata=None):
+#         return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/NewIterator',
+#                                              contract__pb2.IteratorRequest.SerializeToString,
+#                                              contract__pb2.IteratorResponse.FromString,
+#                                              options, channel_credentials,
+#                                              insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+#
+#     @staticmethod
+#     def QueryTx(request,
+#                 target,
+#                 options=(),
+#                 channel_credentials=None,
+#                 call_credentials=None,
+#                 insecure=False,
+#                 compression=None,
+#                 wait_for_ready=None,
+#                 timeout=None,
+#                 metadata=None):
+#         return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/QueryTx',
+#                                              contract__pb2.QueryTxRequest.SerializeToString,
+#                                              contract__pb2.QueryTxResponse.FromString,
+#                                              options, channel_credentials,
+#                                              insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+#
+#     @staticmethod
+#     def QueryBlock(request,
+#                    target,
+#                    options=(),
+#                    channel_credentials=None,
+#                    call_credentials=None,
+#                    insecure=False,
+#                    compression=None,
+#                    wait_for_ready=None,
+#                    timeout=None,
+#                    metadata=None):
+#         return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/QueryBlock',
+#                                              contract__pb2.QueryBlockRequest.SerializeToString,
+#                                              contract__pb2.QueryBlockResponse.FromString,
+#                                              options, channel_credentials,
+#                                              insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+#
+#     @staticmethod
+#     def Transfer(request,
+#                  target,
+#                  options=(),
+#                  channel_credentials=None,
+#                  call_credentials=None,
+#                  insecure=False,
+#                  compression=None,
+#                  wait_for_ready=None,
+#                  timeout=None,
+#                  metadata=None):
+#         return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/Transfer',
+#                                              contract__pb2.TransferRequest.SerializeToString,
+#                                              contract__pb2.TransferResponse.FromString,
+#                                              options, channel_credentials,
+#                                              insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+#
+#     @staticmethod
+#     def ContractCall(request,
+#                      target,
+#                      options=(),
+#                      channel_credentials=None,
+#                      call_credentials=None,
+#                      insecure=False,
+#                      compression=None,
+#                      wait_for_ready=None,
+#                      timeout=None,
+#                      metadata=None):
+#         return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/ContractCall',
+#                                              contract__pb2.ContractCallRequest.SerializeToString,
+#                                              contract__pb2.ContractCallResponse.FromString,
+#                                              options, channel_credentials,
+#                                              insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+#
+#     @staticmethod
+#     def CrossContractQuery(request,
+#                            target,
+#                            options=(),
+#                            channel_credentials=None,
+#                            call_credentials=None,
+#                            insecure=False,
+#                            compression=None,
+#                            wait_for_ready=None,
+#                            timeout=None,
+#                            metadata=None):
+#         return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/CrossContractQuery',
+#                                              contract__pb2.CrossContractQueryRequest.SerializeToString,
+#                                              contract__pb2.CrossContractQueryResponse.FromString,
+#                                              options, channel_credentials,
+#                                              insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+#
+#     @staticmethod
+#     def GetAccountAddresses(request,
+#                             target,
+#                             options=(),
+#                             channel_credentials=None,
+#                             call_credentials=None,
+#                             insecure=False,
+#                             compression=None,
+#                             wait_for_ready=None,
+#                             timeout=None,
+#                             metadata=None):
+#         return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/GetAccountAddresses',
+#                                              contract__pb2.GetAccountAddressesRequest.SerializeToString,
+#                                              contract__pb2.GetAccountAddressesResponse.FromString,
+#                                              options, channel_credentials,
+#                                              insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+#
+#     @staticmethod
+#     def Ping(request,
+#              target,
+#              options=(),
+#              channel_credentials=None,
+#              call_credentials=None,
+#              insecure=False,
+#              compression=None,
+#              wait_for_ready=None,
+#              timeout=None,
+#              metadata=None):
+#         return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/Ping',
+#                                              contract__pb2.PingRequest.SerializeToString,
+#                                              contract__pb2.PingResponse.FromString,
+#                                              options, channel_credentials,
+#                                              insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+#
+#     @staticmethod
+#     def PostLog(request,
+#                 target,
+#                 options=(),
+#                 channel_credentials=None,
+#                 call_credentials=None,
+#                 insecure=False,
+#                 compression=None,
+#                 wait_for_ready=None,
+#                 timeout=None,
+#                 metadata=None):
+#         return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/PostLog',
+#                                              contract__pb2.PostLogRequest.SerializeToString,
+#                                              contract__pb2.PostLogResponse.FromString,
+#                                              options, channel_credentials,
+#                                              insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+#
+#     @staticmethod
+#     def GetCallArgs(request,
+#                     target,
+#                     options=(),
+#                     channel_credentials=None,
+#                     call_credentials=None,
+#                     insecure=False,
+#                     compression=None,
+#                     wait_for_ready=None,
+#                     timeout=None,
+#                     metadata=None):
+#         return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/GetCallArgs',
+#                                              contract__pb2.GetCallArgsRequest.SerializeToString,
+#                                              contract__pb2.CallArgs.FromString,
+#                                              options, channel_credentials,
+#                                              insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+#
+#     @staticmethod
+#     def SetOutput(request,
+#                   target,
+#                   options=(),
+#                   channel_credentials=None,
+#                   call_credentials=None,
+#                   insecure=False,
+#                   compression=None,
+#                   wait_for_ready=None,
+#                   timeout=None,
+#                   metadata=None):
+#         return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/SetOutput',
+#                                              contract__pb2.SetOutputRequest.SerializeToString,
+#                                              contract__pb2.SetOutputResponse.FromString,
+#                                              options, channel_credentials,
+#                                              insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+#
+#     @staticmethod
+#     def EmitEvent(request,
+#                   target,
+#                   options=(),
+#                   channel_credentials=None,
+#                   call_credentials=None,
+#                   insecure=False,
+#                   compression=None,
+#                   wait_for_ready=None,
+#                   timeout=None,
+#                   metadata=None):
+#         return grpc.experimental.unary_unary(request, target, '/xchain.contract.svc.Syscall/EmitEvent',
+#                                              contract__pb2.EmitEventRequest.SerializeToString,
+#                                              contract__pb2.EmitEventResponse.FromString,
+#                                              options, channel_credentials,
+#                                              insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
