@@ -6,26 +6,26 @@ import xuperchain.contract as contract__pb2
 from xuperchain.context import Context
 
 
-class NativeCodeStub(object):
-    """service provided by chain code, called by xchain
-    """
-
-    def __init__(self, channel):
-        """Constructor.
-
-        Args:
-            channel: A grpc.Channel.
-        """
-        self.Call = channel.unary_unary(
-            '/xchain.contract.svc.NativeCode/Call',
-            request_serializer=contract__pb2.NativeCallRequest.SerializeToString,
-            response_deserializer=contract__pb2.NativeCallResponse.FromString,
-        )
-        self.Ping = channel.unary_unary(
-            '/xchain.contract.svc.NativeCode/Ping',
-            request_serializer=contract__pb2.PingRequest.SerializeToString,
-            response_deserializer=contract__pb2.PingResponse.FromString,
-        )
+# class NativeCodeStub(object):
+#     """service provided by chain code, called by xchain
+#     """
+#
+#     def __init__(self, channel):
+#         """Constructor.
+#
+#         Args:
+#             channel: A grpc.Channel.
+#         """
+#         self.Call = channel.unary_unary(
+#             '/xchain.contract.svc.NativeCode/Call',
+#             request_serializer=contract__pb2.NativeCallRequest.SerializeToString,
+#             response_deserializer=contract__pb2.NativeCallResponse.FromString,
+#         )
+#         self.Ping = channel.unary_unary(
+#             '/xchain.contract.svc.NativeCode/Ping',
+#             request_serializer=contract__pb2.PingRequest.SerializeToString,
+#             response_deserializer=contract__pb2.PingResponse.FromString,
+#         )
 
 
 class NativeCodeServicer(object):
