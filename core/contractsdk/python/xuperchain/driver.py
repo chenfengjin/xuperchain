@@ -1,39 +1,24 @@
 import os
 import grpc
 from xuperchain.contract import *
-
-class CodeService():
-    def __init__(self,xchain_addr,contract):
-        self.xchain_addr = xchain_addr
-        self.contract = contract
-
-    def bridge_call(self):
-        pass
-    def call(self,context,request):
-        ctx = None
-        code = None
-        return code(ctx)
-    def ping(self):
-        pass
-    # TODO to another class
-    # def run(self,request:NativeCallRequest,context):
-    #     request = NativeCallRequest()
-    #     ctx = None
+from xuperchain.contract_service import NativeCodeServicer
+from xuperchain.contract_service import NativeCode
+from xuperchain.code_service import CodeService
 
 class Driver():
     def __init__(self):
         pass
-    #  TODO 实用单例模式?
+
+    #  TODO 单例子? 静态方法?
     @staticmethod
-    def serve(self, contract:Contract):
+    def serve(self, contract: any):
         chain_addr = os.environ.get("XCHAIN_CHAIN_ADDR")
         code_port = os.environ.get("XCHAIN_CODE_ADDR")
-        server = grpc.server()
-        # route_guide_pb2_grpc.add_RouteGuideServicer_to_server(
-        #     RouteGuideServicer(), server)
-        server.add_insecure_port('[::]:'+code_port) # ipv4?
+        code_service = CodeService()
+        server = grpc.server(NativeCodeServicer)
+        # register code service
+        server.add_insecure_port('[::]:' + code_port)  # ipv4?
         server.start()
         server.wait_for_termination()
-
-
-
+        # self.conn = None
+        # TODO

@@ -10,13 +10,37 @@ class Context():
         for key,value in callargs:
             self.contractArgs[key] = value
 
-    def getObject(self):
+    def get_object(self):
         pass
-    def putObject(self):
+    def put_object(self):
         pass
-    def deleteObject(self):
+    def delete_object(self):
         pass
-    def emitEvent(self):
+    def emit_event(self):
         pass
-    def emitJsonEvent(self):
+    def emit_json_event(self): #TODO name
         pass
+    def set_output(self):
+        pass
+
+# bridgeCallFunc
+# Init
+# Method
+# Args
+# Caller
+# Initiator
+# AuthRequire
+# PutObject
+# GetObject
+# DeleteObject
+# NewIterator
+# QueryTx
+# QueryBlock
+# Transfer
+# TransferAmount
+# Call
+# CrossQuery
+# SetOutput
+# Logf
+# EmitEvent
+# EmitJSONEvent
