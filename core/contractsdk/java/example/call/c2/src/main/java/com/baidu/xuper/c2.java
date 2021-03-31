@@ -29,8 +29,8 @@ public class c2 implements Contract {
         if (toByte == null) {
             return Response.error("missing to");
         }
-        final String to = new String(toByte);
-        ctx.transfer(to, BigInteger.valueOf(1000));
+//         final String to = new String(toByte);
+//         ctx.transfer(to, BigInteger.valueOf(1000));
         ctx.putObject(cntKey.getBytes(), counter.toByteArray());
 
         return Response.ok(counter.toByteArray());
