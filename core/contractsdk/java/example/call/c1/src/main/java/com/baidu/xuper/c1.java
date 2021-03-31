@@ -31,7 +31,7 @@ public class c1 implements Contract {
         }
         final String to = new String(toByte);
 
-        ctx.transfer(to, BigInteger.valueOf(1));
+//         ctx.transfer(to, BigInteger.valueOf(1));
 
         final HashMap<String, byte[]> callArgs =
                 new HashMap<String, byte[]>() {
