@@ -122,15 +122,15 @@ forloop:
 		case <-c.monitorStopch:
 			return
 		case <-ticker.C:
-			err := c.heartBeat()
-			if err == nil {
-				continue forloop
-			}
-			c.logger.Error("process heartbeat error", "error", err)
-			err = c.restartProcess()
-			if err != nil {
-				c.logger.Error("restart process error", "error", err)
-			}
+			_ = c.heartBeat()
+			//if err == nil {
+			continue forloop
+			//}
+			//c.logger.Error("process heartbeat error", "error", err)
+			//err = c.restartProcess()
+			//if err != nil {
+			//	c.logger.Error("restart process error", "error", err)
+			//}
 		}
 	}
 }
