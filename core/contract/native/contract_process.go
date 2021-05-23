@@ -215,7 +215,7 @@ func (c *contractProcess) GetDesc() *xpb.WasmCodeDesc {
 func (c *contractProcess) makeStartCommand() (string, error) {
 	switch c.desc.GetRuntime() {
 	case "java":
-		return "java -jar " + c.binpath, nil
+		return "java -javaagent:/Users/chenfengjin/baidu/xdev/agent.jar=destfile=/Users/chenfengjin/baidu/xdev/coverage -jar " + c.binpath, nil
 	case "go":
 		return c.binpath, nil
 	case "py":
